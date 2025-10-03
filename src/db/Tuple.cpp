@@ -1,5 +1,6 @@
 #include <cstring>
 #include <db/Tuple.hpp>
+#include <unordered_set>
 #include <stdexcept>
 
 using namespace db;
@@ -26,6 +27,26 @@ const field_t &Tuple::get_field(size_t i) const { return fields.at(i); }
 
 TupleDesc::TupleDesc(const std::vector<type_t> &types, const std::vector<std::string> &names) {
     // TODO pa1
+    // @author Phat Duong
+
+    // Check lengths of names and types
+    if (types.size() != names.size()) {
+        throw std::logic_error("Types and names must have the same length");
+    }
+
+    // Check for unique names
+    std::unordered_set<std::string> name_set;
+    for (const auto &name : names) {
+        if (!name_set.insert(name).second) {
+            throw std::logic_error("Names must be unique");
+        }
+    }
+
+    // Populate schema with names and associated types
+    for (size_t i = 0; i < names.size(); ++i) {
+        name_to_type_pos[names[i]] = i;
+        schema_types.push_back(types[i]);
+    }
 }
 
 bool TupleDesc::compatible(const Tuple &tuple) const {
@@ -51,6 +72,7 @@ size_t TupleDesc::size() const {
 
 Tuple TupleDesc::deserialize(const uint8_t *data) const {
     // TODO pa1
+    return reinterpret_cast<const Tuple &>(data);
 }
 
 void TupleDesc::serialize(uint8_t *data, const Tuple &t) const {
