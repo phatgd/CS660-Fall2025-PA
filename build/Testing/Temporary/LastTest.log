@@ -1,0 +1,903 @@
+Start testing: Oct 05 16:59 EDT
+----------------------------------------------------------
+1/15 Testing: HeapPageTest.EmptyPage
+1/15 Test: HeapPageTest.EmptyPage
+Command: "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test" "--gtest_filter=HeapPageTest.EmptyPage" "--gtest_also_run_disabled_tests"
+Directory: /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build
+"HeapPageTest.EmptyPage" start time: Oct 05 16:59 EDT
+Output:
+----------------------------------------------------------
+Running main() from /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = HeapPageTest.EmptyPage
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from HeapPageTest
+[ RUN      ] HeapPageTest.EmptyPage
+<end of output>
+Test time =   0.09 sec
+----------------------------------------------------------
+Test Failed.
+"HeapPageTest.EmptyPage" end time: Oct 05 16:59 EDT
+"HeapPageTest.EmptyPage" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/15 Testing: HeapPageTest.FullHeader
+2/15 Test: HeapPageTest.FullHeader
+Command: "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test" "--gtest_filter=HeapPageTest.FullHeader" "--gtest_also_run_disabled_tests"
+Directory: /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build
+"HeapPageTest.FullHeader" start time: Oct 05 16:59 EDT
+Output:
+----------------------------------------------------------
+Running main() from /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = HeapPageTest.FullHeader
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from HeapPageTest
+[ RUN      ] HeapPageTest.FullHeader
+unknown file: Failure
+C++ exception with description "not implemented" thrown in the test body.
+[  FAILED  ] HeapPageTest.FullHeader (1 ms)
+[----------] 1 test from HeapPageTest (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (1 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] HeapPageTest.FullHeader
+
+ 1 FAILED TEST
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Failed.
+"HeapPageTest.FullHeader" end time: Oct 05 16:59 EDT
+"HeapPageTest.FullHeader" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/15 Testing: HeapPageTest.CountTuples
+3/15 Test: HeapPageTest.CountTuples
+Command: "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test" "--gtest_filter=HeapPageTest.CountTuples" "--gtest_also_run_disabled_tests"
+Directory: /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build
+"HeapPageTest.CountTuples" start time: Oct 05 16:59 EDT
+Output:
+----------------------------------------------------------
+Running main() from /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = HeapPageTest.CountTuples
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from HeapPageTest
+[ RUN      ] HeapPageTest.CountTuples
+unknown file: Failure
+C++ exception with description "not implemented" thrown in the test body.
+[  FAILED  ] HeapPageTest.CountTuples (0 ms)
+[----------] 1 test from HeapPageTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] HeapPageTest.CountTuples
+
+ 1 FAILED TEST
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Failed.
+"HeapPageTest.CountTuples" end time: Oct 05 16:59 EDT
+"HeapPageTest.CountTuples" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/15 Testing: HeapPageTest.InsertTuple
+4/15 Test: HeapPageTest.InsertTuple
+Command: "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test" "--gtest_filter=HeapPageTest.InsertTuple" "--gtest_also_run_disabled_tests"
+Directory: /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build
+"HeapPageTest.InsertTuple" start time: Oct 05 16:59 EDT
+Output:
+----------------------------------------------------------
+Running main() from /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = HeapPageTest.InsertTuple
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from HeapPageTest
+[ RUN      ] HeapPageTest.InsertTuple
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Failed.
+"HeapPageTest.InsertTuple" end time: Oct 05 16:59 EDT
+"HeapPageTest.InsertTuple" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/15 Testing: HeapPageTest.DeleteTuple
+5/15 Test: HeapPageTest.DeleteTuple
+Command: "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test" "--gtest_filter=HeapPageTest.DeleteTuple" "--gtest_also_run_disabled_tests"
+Directory: /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build
+"HeapPageTest.DeleteTuple" start time: Oct 05 16:59 EDT
+Output:
+----------------------------------------------------------
+Running main() from /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = HeapPageTest.DeleteTuple
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from HeapPageTest
+[ RUN      ] HeapPageTest.DeleteTuple
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:79: Failure
+Expected: hp.deleteTuple(2) throws an exception.
+  Actual: it doesn't.
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:82: Failure
+Expected: hp.deleteTuple(8) throws an exception.
+  Actual: it doesn't.
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:83: Failure
+Expected: hp.deleteTuple(9) throws an exception.
+  Actual: it doesn't.
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:87: Failure
+Expected: hp.deleteTuple(14) throws an exception.
+  Actual: it doesn't.
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Failed.
+"HeapPageTest.DeleteTuple" end time: Oct 05 16:59 EDT
+"HeapPageTest.DeleteTuple" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/15 Testing: HeapPageTest.GetTuple
+6/15 Test: HeapPageTest.GetTuple
+Command: "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test" "--gtest_filter=HeapPageTest.GetTuple" "--gtest_also_run_disabled_tests"
+Directory: /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build
+"HeapPageTest.GetTuple" start time: Oct 05 16:59 EDT
+Output:
+----------------------------------------------------------
+Running main() from /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = HeapPageTest.GetTuple
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from HeapPageTest
+[ RUN      ] HeapPageTest.GetTuple
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Failed.
+"HeapPageTest.GetTuple" end time: Oct 05 16:59 EDT
+"HeapPageTest.GetTuple" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/15 Testing: HeapFileTest.InsertTuple
+7/15 Test: HeapFileTest.InsertTuple
+Command: "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test" "--gtest_filter=HeapFileTest.InsertTuple" "--gtest_also_run_disabled_tests"
+Directory: /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build
+"HeapFileTest.InsertTuple" start time: Oct 05 16:59 EDT
+Output:
+----------------------------------------------------------
+Running main() from /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = HeapFileTest.InsertTuple
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from HeapFileTest
+[ RUN      ] HeapFileTest.InsertTuple
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Failed.
+"HeapFileTest.InsertTuple" end time: Oct 05 16:59 EDT
+"HeapFileTest.InsertTuple" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/15 Testing: HeapFileTest.EmptyPage
+8/15 Test: HeapFileTest.EmptyPage
+Command: "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test" "--gtest_filter=HeapFileTest.EmptyPage" "--gtest_also_run_disabled_tests"
+Directory: /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build
+"HeapFileTest.EmptyPage" start time: Oct 05 16:59 EDT
+Output:
+----------------------------------------------------------
+Running main() from /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = HeapFileTest.EmptyPage
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from HeapFileTest
+[ RUN      ] HeapFileTest.EmptyPage
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:182: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  1
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/heap_test.cpp:186: Failure
+Expected equality of these values:
+  file.getNumPages()
+    Which is: 0
+  2
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Failed.
+"HeapFileTest.EmptyPage" end time: Oct 05 16:59 EDT
+"HeapFileTest.EmptyPage" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/15 Testing: TupleTest.Constructor
+9/15 Test: TupleTest.Constructor
+Command: "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test" "--gtest_filter=TupleTest.Constructor" "--gtest_also_run_disabled_tests"
+Directory: /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build
+"TupleTest.Constructor" start time: Oct 05 16:59 EDT
+Output:
+----------------------------------------------------------
+Running main() from /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = TupleTest.Constructor
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from TupleTest
+[ RUN      ] TupleTest.Constructor
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/tuple_test.cpp:8: Failure
+Expected: db::TupleDesc td(types, {"id", "id", "price"}) throws an exception.
+  Actual: it doesn't.
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/tuple_test.cpp:9: Failure
+Expected: db::TupleDesc td(types, {"id", "price"}) throws an exception.
+  Actual: it doesn't.
+/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/tests/pa1/tuple_test.cpp:10: Failure
+Expected: db::TupleDesc td(types, {"id", "name", "price", "field"}) throws an exception.
+  Actual: it doesn't.
+[  FAILED  ] TupleTest.Constructor (0 ms)
+[----------] 1 test from TupleTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] TupleTest.Constructor
+
+ 1 FAILED TEST
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Failed.
+"TupleTest.Constructor" end time: Oct 05 16:59 EDT
+"TupleTest.Constructor" time elapsed: 00:00:00
+----------------------------------------------------------
+
+10/15 Testing: TupleTest.OffsetOf
+10/15 Test: TupleTest.OffsetOf
+Command: "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test" "--gtest_filter=TupleTest.OffsetOf" "--gtest_also_run_disabled_tests"
+Directory: /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build
+"TupleTest.OffsetOf" start time: Oct 05 16:59 EDT
+Output:
+----------------------------------------------------------
+Running main() from /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = TupleTest.OffsetOf
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from TupleTest
+[ RUN      ] TupleTest.OffsetOf
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Failed.
+"TupleTest.OffsetOf" end time: Oct 05 16:59 EDT
+"TupleTest.OffsetOf" time elapsed: 00:00:00
+----------------------------------------------------------
+
+11/15 Testing: TupleTest.IndexOf
+11/15 Test: TupleTest.IndexOf
+Command: "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test" "--gtest_filter=TupleTest.IndexOf" "--gtest_also_run_disabled_tests"
+Directory: /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build
+"TupleTest.IndexOf" start time: Oct 05 16:59 EDT
+Output:
+----------------------------------------------------------
+Running main() from /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = TupleTest.IndexOf
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from TupleTest
+[ RUN      ] TupleTest.IndexOf
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Failed.
+"TupleTest.IndexOf" end time: Oct 05 16:59 EDT
+"TupleTest.IndexOf" time elapsed: 00:00:00
+----------------------------------------------------------
+
+12/15 Testing: TupleTest.Compatible
+12/15 Test: TupleTest.Compatible
+Command: "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test" "--gtest_filter=TupleTest.Compatible" "--gtest_also_run_disabled_tests"
+Directory: /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build
+"TupleTest.Compatible" start time: Oct 05 16:59 EDT
+Output:
+----------------------------------------------------------
+Running main() from /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = TupleTest.Compatible
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from TupleTest
+[ RUN      ] TupleTest.Compatible
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Failed.
+"TupleTest.Compatible" end time: Oct 05 16:59 EDT
+"TupleTest.Compatible" time elapsed: 00:00:00
+----------------------------------------------------------
+
+13/15 Testing: TupleTest.Length
+13/15 Test: TupleTest.Length
+Command: "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test" "--gtest_filter=TupleTest.Length" "--gtest_also_run_disabled_tests"
+Directory: /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build
+"TupleTest.Length" start time: Oct 05 16:59 EDT
+Output:
+----------------------------------------------------------
+Running main() from /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = TupleTest.Length
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from TupleTest
+[ RUN      ] TupleTest.Length
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Failed.
+"TupleTest.Length" end time: Oct 05 16:59 EDT
+"TupleTest.Length" time elapsed: 00:00:00
+----------------------------------------------------------
+
+14/15 Testing: TupleTest.Merge
+14/15 Test: TupleTest.Merge
+Command: "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test" "--gtest_filter=TupleTest.Merge" "--gtest_also_run_disabled_tests"
+Directory: /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build
+"TupleTest.Merge" start time: Oct 05 16:59 EDT
+Output:
+----------------------------------------------------------
+Running main() from /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = TupleTest.Merge
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from TupleTest
+[ RUN      ] TupleTest.Merge
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Failed.
+"TupleTest.Merge" end time: Oct 05 16:59 EDT
+"TupleTest.Merge" time elapsed: 00:00:00
+----------------------------------------------------------
+
+15/15 Testing: TupleTest.MergeConflict
+15/15 Test: TupleTest.MergeConflict
+Command: "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test" "--gtest_filter=TupleTest.MergeConflict" "--gtest_also_run_disabled_tests"
+Directory: /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build
+"TupleTest.MergeConflict" start time: Oct 05 16:59 EDT
+Output:
+----------------------------------------------------------
+Running main() from /mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = TupleTest.MergeConflict
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from TupleTest
+[ RUN      ] TupleTest.MergeConflict
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Failed.
+"TupleTest.MergeConflict" end time: Oct 05 16:59 EDT
+"TupleTest.MergeConflict" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 05 16:59 EDT
