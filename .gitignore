@@ -23,7 +23,7 @@ build/
 out/
 
 # Makefile artifacts
-CmakeLists.txt
+CMakeLists.txt
 Makefile
 
 # Project specific ignores

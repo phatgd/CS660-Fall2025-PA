@@ -55,23 +55,23 @@ TupleDesc::TupleDesc(const std::vector<type_t> &types, const std::vector<std::st
 bool TupleDesc::compatible(const Tuple &tuple) const {
     // @author Sam Gibson
     // if different number of fields return false
-    // if(this->size() != tuple.size()){
-    //     return false;
-    // }
+    if(this->size() != tuple.size()){
+        return false;
+    }
 
-    // // compare each field
-    // for(int x = 0; x < this->size(); x++){
-    //     if(this->types[x] != tuple.field_type(x)){
-    //         return false;
-    //     }
-    // }  
+    // compare each field
+    for(int x = 0; x < this->size(); x++){
+        if(this->field_types[x] != tuple.field_type(x)){
+            return false;
+        }
+    }  
 
-    // return true;
-    //throw std::runtime_error("not implemented");
+    return true;
+    throw std::runtime_error("not implemented");
 }
 
 size_t TupleDesc::index_of(const std::string &name) const {
-    // TODO pa1
+    // @author Phat Duong
 }
 
 size_t TupleDesc::offset_of(const size_t &index) const {
@@ -83,7 +83,8 @@ size_t TupleDesc::length() const {
 }
 
 size_t TupleDesc::size() const {
-    // TODO pa1
+    // @author Sam Gibson
+    return field_names.size();
 }
 
 Tuple TupleDesc::deserialize(const uint8_t *data) const {
@@ -96,5 +97,19 @@ void TupleDesc::serialize(uint8_t *data, const Tuple &t) const {
 }
 
 db::TupleDesc TupleDesc::merge(const TupleDesc &td1, const TupleDesc &td2) {
-    // TODO pa1
+    // @author Phat Duong   
+
+    for (int i = 0; i < td2.size(); ++i) {
+        // Check for duplicate field namess
+        if (td1.name_to_pos.find(td2.field_names[i]) != td1.name_to_pos.end()) {
+            throw std::logic_error("Cannot merge TupleDescs with duplicate field names");
+        }
+
+        td1.field_names.push_back(td2.field_names[i]);
+        td1.field_types.push_back(td2.field_types[i]);
+        td1.field_sizes.push_back(td2.field_sizes[i]);
+        td1.name_to_pos[td2.field_names[i]] = td1.size() + i - 1;
+    }
+
+    return td1;
 }
