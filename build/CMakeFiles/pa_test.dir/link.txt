@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/pa_test.dir/tests/pa1/heap_test.cpp.o CMakeFiles/pa_test.dir/tests/pa1/tuple_test.cpp.o -o pa_test  libdb.a lib/libgtest_main.a lib/libgtest.a 

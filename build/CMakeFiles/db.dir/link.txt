@@ -1,2 +1,0 @@
-/usr/bin/ar qc libdb.a CMakeFiles/db.dir/src/db/BufferPool.cpp.o CMakeFiles/db.dir/src/db/Database.cpp.o CMakeFiles/db.dir/src/db/DbFile.cpp.o CMakeFiles/db.dir/src/db/HeapFile.cpp.o CMakeFiles/db.dir/src/db/HeapPage.cpp.o CMakeFiles/db.dir/src/db/Iterator.cpp.o CMakeFiles/db.dir/src/db/Tuple.cpp.o
-/usr/bin/ranlib libdb.a

@@ -1,5 +1,0 @@
-if(EXISTS "/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test[1]_tests.cmake")
-  include("/mnt/c/Users/smjgi/OneDrive/Desktop/grad school/CS660-Fall2025-PA/build/pa_test[1]_tests.cmake")
-else()
-  add_test(pa_test_NOT_BUILT pa_test_NOT_BUILT)
-endif()
