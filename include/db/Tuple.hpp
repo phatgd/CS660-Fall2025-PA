@@ -21,11 +21,11 @@ namespace db {
     };
 
     class TupleDesc {
-        std::vector<type_t> &types; //  types of each field
-        std::vector<std::string> &names; // names of fields
+        std::vector<type_t> field_types; //  types of each field
+        std::vector<std::string> field_names; // names of fields
 
-        std::vector<size_t> schema_types; // vector of field type sizes (convert the type to bit size?)
-        std::unordered_map<std::string, size_t> name_to_type_pos; // map from field name to field position
+        std::vector<size_t> field_sizes; // vector of field type sizes (convert the type to bit size?)
+        std::unordered_map<std::string, size_t> name_to_pos; // map from field name to field position
 
 
     public:
