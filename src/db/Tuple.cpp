@@ -54,16 +54,16 @@ TupleDesc::TupleDesc(const std::vector<type_t> &types, const std::vector<std::st
 bool TupleDesc::compatible(const Tuple &tuple) const {
     // @author Sam Gibson
     // if different number of fields return false
-    // if(this->size() != tuple.size()){
-    //     return false;
-    // }
+    if(this->size() != tuple.size()){
+        return false;
+    }
 
-    // // compare each field
-    // for(int x = 0; x < this->size(); x++){
-    //     if(this->types[x] != tuple.field_type(x)){
-    //         return false;
-    //     }
-    // }  
+    // compare each field
+    for(int x = 0; x < this->size(); x++){
+        if(this->field_types[x] != tuple.field_type(x)){
+            return false;
+        }
+    }  
 
     // return true;
     //throw std::runtime_error("not implemented");
