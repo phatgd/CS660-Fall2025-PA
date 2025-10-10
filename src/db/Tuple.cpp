@@ -44,28 +44,28 @@ TupleDesc::TupleDesc(const std::vector<type_t> &types, const std::vector<std::st
 
     // Populate schema with names and associated types
     for (size_t i = 0; i < names.size(); ++i) {
-        name_to_type_pos[names[i]] = i;
-        schema_types.push_back(st_size(types[i]));
+        name_to_pos[names[i]] = i;
+        field_names.push_back(names[i]);
+        field_types.push_back(types[i]);
+        field_sizes.push_back(static_cast<size_t>(types[i]));
     }
-    // this->types = types;
-    // this->names = names;
 }
 
 bool TupleDesc::compatible(const Tuple &tuple) const {
     // @author Sam Gibson
     // if different number of fields return false
-    if(this->size() != tuple.size()){
-        return false;
-    }
+    // if(this->size() != tuple.size()){
+    //     return false;
+    // }
 
-    // compare each field
-    for(int x = 0; x < this->size(); x++){
-        if(this->types[x] != tuple.field_type(x)){
-            return false;
-        }
-    }  
+    // // compare each field
+    // for(int x = 0; x < this->size(); x++){
+    //     if(this->types[x] != tuple.field_type(x)){
+    //         return false;
+    //     }
+    // }  
 
-    return true;
+    // return true;
     //throw std::runtime_error("not implemented");
 }
 
