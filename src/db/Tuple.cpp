@@ -2,6 +2,8 @@
 #include <db/Tuple.hpp>
 #include <unordered_set>
 #include <stdexcept>
+#include <unordered_set>
+#include <sys/stat.h>
 
 using namespace db;
 
@@ -26,12 +28,11 @@ size_t Tuple::size() const { return fields.size(); }
 const field_t &Tuple::get_field(size_t i) const { return fields.at(i); }
 
 TupleDesc::TupleDesc(const std::vector<type_t> &types, const std::vector<std::string> &names) {
-    // TODO pa1
     // @author Phat Duong
 
     // Check lengths of names and types
     if (types.size() != names.size()) {
-        throw std::logic_error("Types and names must have the same length");
+        throw std::logic_error("must have same number of field names and types");
     }
 
     // Check for unique names
@@ -44,14 +45,29 @@ TupleDesc::TupleDesc(const std::vector<type_t> &types, const std::vector<std::st
 
     // Populate schema with names and associated types
     for (size_t i = 0; i < names.size(); ++i) {
-        name_to_type_pos[names[i]] = i;
-        schema_types.push_back(types[i]);
+        name_to_pos[names[i]] = i;
+        field_names.push_back(names[i]);
+        field_types.push_back(types[i]);
+        field_sizes.push_back(static_cast<size_t>(types[i]));
     }
 }
 
 bool TupleDesc::compatible(const Tuple &tuple) const {
-    // TODO pa1
-    throw std::runtime_error("not implemented");
+    // @author Sam Gibson
+    // if different number of fields return false
+    // if(this->size() != tuple.size()){
+    //     return false;
+    // }
+
+    // // compare each field
+    // for(int x = 0; x < this->size(); x++){
+    //     if(this->types[x] != tuple.field_type(x)){
+    //         return false;
+    //     }
+    // }  
+
+    // return true;
+    //throw std::runtime_error("not implemented");
 }
 
 size_t TupleDesc::index_of(const std::string &name) const {
