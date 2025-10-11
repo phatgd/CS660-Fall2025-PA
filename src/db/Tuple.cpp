@@ -122,7 +122,19 @@ Tuple TupleDesc::deserialize(const uint8_t *data) const {
 }
 
 void TupleDesc::serialize(uint8_t *data, const Tuple &t) const {
-    // TODO pa1
+    // @author Sam Gibson
+    // modify numbers 
+        // file.write(reinterpret_cast<const char*>(this),
+        //sizeof(*this));
+
+    // make pointer?
+    // 
+
+    for(int x = 0; x < t.size(); x++){
+        piece += t[x];
+        pointer += t[x].field_type.size();
+        // append piece to data
+    }
 }
 
 db::TupleDesc TupleDesc::merge(const TupleDesc &td1, const TupleDesc &td2) {
