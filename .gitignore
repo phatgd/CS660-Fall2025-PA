@@ -1,0 +1,32 @@
+# VSCode settings
+.vscode/
+.history/
+*.code-workspace
+settings.json
+
+# Node modules
+node_modules/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+
+# Build output
+dist/
+build/
+out/
+
+# Makefile artifacts
+CMakeLists.txt
+Makefile
+
+# Project specific ignores
+docs/
+README.md

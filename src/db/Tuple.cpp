@@ -1,5 +1,6 @@
 #include <cstring>
 #include <db/Tuple.hpp>
+#include <unordered_set>
 #include <stdexcept>
 #include <unordered_set>
 #include <sys/stat.h>
@@ -47,7 +48,11 @@ TupleDesc::TupleDesc(const std::vector<type_t> &types, const std::vector<std::st
         name_to_pos[names[i]] = i;
         field_names.push_back(names[i]);
         field_types.push_back(types[i]);
-        field_sizes.push_back(static_cast<size_t>(types[i]));
+        field_sizes.push_back(
+            types[i] == type_t::INT ? INT_SIZE :
+            types[i] == type_t::DOUBLE ? DOUBLE_SIZE :
+            CHAR_SIZE
+        );
     }
 }
 
@@ -65,16 +70,34 @@ bool TupleDesc::compatible(const Tuple &tuple) const {
         }
     }  
 
-    // return true;
-    //throw std::runtime_error("not implemented");
+    return true;
+    throw std::runtime_error("not implemented");
 }
 
 size_t TupleDesc::index_of(const std::string &name) const {
-    // TODO pa1
+    // @author Phat Duong
+
+    // Check if name exists
+    if (name_to_pos.find(name) == name_to_pos.end()) {
+        throw std::logic_error("Field name does not exist");
+    }
+    return name_to_pos.at(name);
 }
 
 size_t TupleDesc::offset_of(const size_t &index) const {
-    // TODO pa1
+    // @author Phat Duong
+
+    if (index >= field_names.size()) {
+        throw std::logic_error("Index out of bounds");
+    }
+
+    size_t offset = 0;
+    for (size_t i = 0; i < index; ++i) {
+        offset += field_sizes[i];
+    }
+    
+    return offset;
+
 }
 
 size_t TupleDesc::length() const {
@@ -82,11 +105,13 @@ size_t TupleDesc::length() const {
 }
 
 size_t TupleDesc::size() const {
-    // TODO pa1
+    // @author Sam Gibson
+    return field_names.size();
 }
 
 Tuple TupleDesc::deserialize(const uint8_t *data) const {
     // TODO pa1
+    return reinterpret_cast<const Tuple &>(data);
 }
 
 void TupleDesc::serialize(uint8_t *data, const Tuple &t) const {
@@ -94,5 +119,19 @@ void TupleDesc::serialize(uint8_t *data, const Tuple &t) const {
 }
 
 db::TupleDesc TupleDesc::merge(const TupleDesc &td1, const TupleDesc &td2) {
-    // TODO pa1
+    // @author Phat Duong   
+
+    for (int i = 0; i < td2.size(); ++i) {
+        // Check for duplicate field namess
+        if (td1.name_to_pos.find(td2.field_names[i]) != td1.name_to_pos.end()) {
+            throw std::logic_error("Cannot merge TupleDescs with duplicate field names");
+        }
+
+        td1.field_names.push_back(td2.field_names[i]);
+        td1.field_types.push_back(td2.field_types[i]);
+        td1.field_sizes.push_back(td2.field_sizes[i]);
+        td1.name_to_pos[td2.field_names[i]] = td1.size() - 1;
+    }
+
+    return td1;
 }
