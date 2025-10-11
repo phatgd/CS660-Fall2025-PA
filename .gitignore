@@ -2,6 +2,7 @@
 .vscode/
 .history/
 *.code-workspace
+settings.json
 
 # Node modules
 node_modules/

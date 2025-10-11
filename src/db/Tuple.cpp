@@ -48,7 +48,11 @@ TupleDesc::TupleDesc(const std::vector<type_t> &types, const std::vector<std::st
         name_to_pos[names[i]] = i;
         field_names.push_back(names[i]);
         field_types.push_back(types[i]);
-        field_sizes.push_back(static_cast<size_t>(types[i]));
+        field_sizes.push_back(
+            types[i] == type_t::INT ? INT_SIZE :
+            types[i] == type_t::DOUBLE ? DOUBLE_SIZE :
+            CHAR_SIZE
+        );
     }
 }
 
@@ -72,10 +76,28 @@ bool TupleDesc::compatible(const Tuple &tuple) const {
 
 size_t TupleDesc::index_of(const std::string &name) const {
     // @author Phat Duong
+
+    // Check if name exists
+    if (name_to_pos.find(name) == name_to_pos.end()) {
+        throw std::logic_error("Field name does not exist");
+    }
+    return name_to_pos.at(name);
 }
 
 size_t TupleDesc::offset_of(const size_t &index) const {
-    // TODO pa1
+    // @author Phat Duong
+
+    if (index >= field_names.size()) {
+        throw std::logic_error("Index out of bounds");
+    }
+
+    size_t offset = 0;
+    for (size_t i = 0; i < index; ++i) {
+        offset += field_sizes[i];
+    }
+    
+    return offset;
+
 }
 
 size_t TupleDesc::length() const {
@@ -108,7 +130,7 @@ db::TupleDesc TupleDesc::merge(const TupleDesc &td1, const TupleDesc &td2) {
         td1.field_names.push_back(td2.field_names[i]);
         td1.field_types.push_back(td2.field_types[i]);
         td1.field_sizes.push_back(td2.field_sizes[i]);
-        td1.name_to_pos[td2.field_names[i]] = td1.size() + i - 1;
+        td1.name_to_pos[td2.field_names[i]] = td1.size() - 1;
     }
 
     return td1;
