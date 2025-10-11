@@ -101,7 +101,14 @@ size_t TupleDesc::offset_of(const size_t &index) const {
 }
 
 size_t TupleDesc::length() const {
-    // TODO pa1
+    // @author Sam Gibson
+    size_t sum = 0;
+
+    for(int x = 0; x< field_sizes.size(); x++){
+        sum += field_sizes[x];
+    }
+
+    return sum;
 }
 
 size_t TupleDesc::size() const {
