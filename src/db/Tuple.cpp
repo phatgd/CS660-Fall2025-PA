@@ -118,6 +118,38 @@ size_t TupleDesc::size() const {
 
 Tuple TupleDesc::deserialize(const uint8_t *data) const {
     // TODO pa1
+    // @author Sam Gibson
+
+    uint8_t* ptr_d = data; // point to beginning of bits
+
+    // go through each field, retrieve data
+    for(int x = 0; x< field_types.size(); x++){
+        
+        type_t this_type = field_types[x]; // type we are reading
+        size_t this_size = field_sizes[x]; // size of data we are reading
+
+        if(this_type == type_t::INT){
+            // logic: take in x len data, push it into tuple, move pointer to next thing
+
+            // code from ta: 
+            // fields.emplace_back(reinterpret_cast<*int>)
+            ptr_d += this_size; // move ptr 
+        }
+        else if(this_type == type_t::DOUBLE){
+            // fields.emplace_back(reinterpret_cast<*double>)
+            ptr_d += this_size;
+        }
+        else if(this_type == type_t::CHAR){ // char
+            // chars different, need to read then trim empty at the end
+            // fields.emplace_back(reinterpret_cast<*char>)
+
+            ptr_d += this_size;
+        }
+        else{
+            throw std::logic_error("Bad values");
+        }
+    }
+
     return reinterpret_cast<const Tuple &>(data);
 }
 
