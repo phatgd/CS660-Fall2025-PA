@@ -123,17 +123,44 @@ Tuple TupleDesc::deserialize(const uint8_t *data) const {
 
 void TupleDesc::serialize(uint8_t *data, const Tuple &t) const {
     // @author Sam Gibson
-    // modify numbers 
-        // file.write(reinterpret_cast<const char*>(this),
-        //sizeof(*this));
+   
+    // data written to this variable
+    uint8_t* ptr_d = data;
 
-    // make pointer?
-    // 
+    // iterate through entire tuple
+    for(int x = 0; x < field_types.size(); x++){
+        type_t this_type = field_types[x];
+        const field_t &content = t.get_field(x);
 
-    for(int x = 0; x < t.size(); x++){
-        piece += t[x];
-        pointer += t[x].field_type.size();
-        // append piece to data
+        if(this_type == type_t::INT){
+            int v = std::get<int>(content);
+            size_t piece = INT_SIZE;
+
+            // save data and move ptr
+            std::memcpy(ptr_d, &v, piece);
+            ptr_d += piece;
+        }
+        else if(this_type == type_t::DOUBLE){
+            double v = std::get<double>(content);
+            size_t piece = DOUBLE_SIZE;
+
+            // save data and move ptr
+            std::memcpy(ptr_d, &v, piece);
+            ptr_d += piece;
+        }
+        else if(this_type == type_t::CHAR){ // char
+            std::string v = std::get<std::string>(content);
+            size_t piece = CHAR_SIZE;
+
+            std::memset(ptr_d, '\0', piece); // concat to fill entire space
+
+            // save data and move ptr
+            std::memcpy(ptr_d, &v, v.size());
+            ptr_d += piece;
+        }
+        else{
+            throw std::logic_error("Field value incorrect :(");
+        }
     }
 }
 
