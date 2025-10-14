@@ -11,6 +11,11 @@ const TupleDesc &DbFile::getTupleDesc() const { return td; }
 DbFile::DbFile(const std::string &name, const TupleDesc &td) : name(name), td(td) {
     // TODO pa1: open file and initialize numPages
     // Hint: use open, fstat
+
+    // need int file descriptor
+    // If the file does not exist, it is created a new file with the given file name.
+    // numPages =  number of pages in the file
+    // A file should always have one page when it is created (even if it is empty).
 }
 
 DbFile::~DbFile() {
