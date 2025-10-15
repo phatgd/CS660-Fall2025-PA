@@ -117,7 +117,37 @@ size_t TupleDesc::size() const {
 }
 
 Tuple TupleDesc::deserialize(const uint8_t *data) const {
-    // @author Sam Gibson
+    // TODO pa1
+    // @author Sam Gibson, Phat Duong
+
+    uint8_t *ptr_d = const_cast<uint8_t*>(data); // ptr to beginning of data bits
+    std::vector<field_t> fields; //empty fields for results
+    field_t *val; // value to be read
+
+    for (int i = 0; i < this->size(); i++){
+        type_t this_type = field_types[i]; // type we are reading
+        size_t this_size = field_sizes[i]; // size of data we are reading
+
+        std::memcpy(&val, ptr_d, this_size); // copy data into val
+
+        switch(this_type){
+            case type_t::INT: 
+                fields.emplace_back(reinterpret_cast<int*>(val));
+                break;
+            case type_t::DOUBLE:
+                fields.emplace_back(reinterpret_cast<double*>(val));
+                break;
+            case type_t::CHAR:
+                fields.emplace_back(reinterpret_cast<std::string*>(val));
+                break;
+        }
+
+        ptr_d += this_size; // move ptr to next
+    }
+    return Tuple(fields); //return new Tuple with fields
+
+
+    // uint8_t* ptr_d = data; // point to beginning of bits
 
     // go through each field, retrieve data
     for(int x = 0; x< field_types.size(); x++){
@@ -150,16 +180,12 @@ Tuple TupleDesc::deserialize(const uint8_t *data) const {
             // chars different, need to read then trim empty at the end
             // fields.emplace_back(reinterpret_cast<*char>)
 
-            std::string stuff = 0;
-            fields.emplace_back(stuff);
-            ptr_d += this_size; // move pointer
-        }
-        else{
-            throw std::logic_error("Bad values");
-        }
-    }
-
-    return reinterpret_cast<const Tuple &>(data);
+    //         ptr_d += this_size;
+    //     }
+    //     else{
+    //         throw std::logic_error("Bad values");
+    //     }
+    // }
 }
 
 void TupleDesc::serialize(uint8_t *data, const Tuple &t) const {
