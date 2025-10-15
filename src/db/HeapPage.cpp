@@ -16,23 +16,11 @@ HeapPage::HeapPage(Page &page, const TupleDesc &td) : td(td) {
 size_t HeapPage::begin() const {
     // @author Sam Gibson
     
-    // code TA gave me not working ? 
-    // for(size_t x = *header; x< capacity; x++){ //iterate through header
-    //     if(!empty(x)){ // not empty
-    //         return x;
-    //     }
-    // }
-    uint8_t *ptr_first = header; // ptr to head
-    int idx = 0; // index of first slot with data
-
-    for(int x = 0; x< (capacity/8)-1; x++){
-        if(*ptr_first == 1){ // find a full 
-            idx = x;
-            return td.length()*x;
+    for(size_t x = 0; x< capacity; x++){ //iterate through header
+        if(!empty(x)){ // not empty
+            return x;
         }
-        ptr_first++;
     }
-
     return capacity; 
 }
 
@@ -74,7 +62,7 @@ void HeapPage::next(size_t &slot) const {
 
 bool HeapPage::empty(size_t slot) const {
      // @author Sam Gibson
-    if(slot == 0){
+    if(header[slot] == 0){
         return true;
     }
     else{
