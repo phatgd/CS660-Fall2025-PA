@@ -117,38 +117,47 @@ size_t TupleDesc::size() const {
 }
 
 Tuple TupleDesc::deserialize(const uint8_t *data) const {
-    // TODO pa1
     // @author Sam Gibson
 
-    // uint8_t* ptr_d = data; // point to beginning of bits
-
     // go through each field, retrieve data
-    // for(int x = 0; x< field_types.size(); x++){
+    for(int x = 0; x< field_types.size(); x++){
         
-    //     type_t this_type = field_types[x]; // type we are reading
-    //     size_t this_size = field_sizes[x]; // size of data we are reading
+        uint8_t *ptr_d = data; // point to bits
 
-    //     if(this_type == type_t::INT){
-    //         // logic: take in x len data, push it into tuple, move pointer to next thing
+        type_t this_type = field_types[x]; // type we are reading
+        size_t this_size = field_sizes[x]; // size of data we are reading
 
-    //         // code from ta: 
-    //         // fields.emplace_back(reinterpret_cast<*int>)
-    //         ptr_d += this_size; // move ptr 
-    //     }
-    //     else if(this_type == type_t::DOUBLE){
-    //         // fields.emplace_back(reinterpret_cast<*double>)
-    //         ptr_d += this_size;
-    //     }
-    //     else if(this_type == type_t::CHAR){ // char
-    //         // chars different, need to read then trim empty at the end
-    //         // fields.emplace_back(reinterpret_cast<*char>)
+        std::vector<field_t> deserial_fields = []; // save results here
 
-    //         ptr_d += this_size;
-    //     }
-    //     else{
-    //         throw std::logic_error("Bad values");
-    //     }
-    // }
+        if(this_type == type_t::INT){
+            int y = 0; // place holder
+            uint8_t content; 
+
+            while(y++ < this_size){
+                content += *ptr_d;
+                ptr_d++; // move to next bit
+            }
+
+            fields.emplace_back(reinterpret_cast<*int>(content));
+        }
+        else if(this_type == type_t::DOUBLE){
+
+            double stuff = 0;
+            fields.emplace_back(stuff);
+            ptr_d += this_size; // move pointer
+        }
+        else if(this_type == type_t::CHAR){ // char
+            // chars different, need to read then trim empty at the end
+            // fields.emplace_back(reinterpret_cast<*char>)
+
+            std::string stuff = 0;
+            fields.emplace_back(stuff);
+            ptr_d += this_size; // move pointer
+        }
+        else{
+            throw std::logic_error("Bad values");
+        }
+    }
 
     return reinterpret_cast<const Tuple &>(data);
 }
