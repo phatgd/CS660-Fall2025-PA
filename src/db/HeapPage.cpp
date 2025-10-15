@@ -8,14 +8,13 @@ using namespace db;
 HeapPage::HeapPage(Page &page, const TupleDesc &td) : td(td) {
     // @author Sam Gibson
 
-    capacity = std::floor((DEFAULT_PAGE_SIZE*8)/(static_cast<int>(td.length()) * 8 + 1)); // number of slots in a page
-    header = page.data(); // header is begining of page
+    capacity = std::floor((DEFAULT_PAGE_SIZE*8)/(td.length() * 8 + 1)); // number of slots in a page/ header
+    header = page.data(); // begining of page
     data = header + (DEFAULT_PAGE_SIZE - td.length() * capacity); //  P − T ∗ C 
 }
 
 size_t HeapPage::begin() const {
     // @author Sam Gibson
-    
     for(size_t x = 0; x< capacity; x++){ //iterate through header
         if(!empty(x)){ // not empty
             return x;
