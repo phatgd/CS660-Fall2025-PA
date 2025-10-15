@@ -1,15 +1,15 @@
 #include <db/Database.hpp>
 #include <db/HeapPage.hpp>
 #include <stdexcept>
+#include <cmath>
 
 using namespace db;
 
 HeapPage::HeapPage(Page &page, const TupleDesc &td) : td(td) {
-    // NOTE: header and data should point to locations inside the page buffer. Do not allocate extra memory.
-    
-    // capacity = std::floor((page.size()*8)/(T ∗ 8 + 1)); // number of slots in a page
+    // @author Sam Gibson
+    capacity = std::floor((4096*8)/(static_cast<int>(td.length()) * 8 + 1)); // number of slots in a page
     header = &page[0]; // header is begining of page
-    // data = ( P − T ∗ C ); // data is after the header ends
+    data = &page[capacity/8]; // data is after the header ends
 
 }
 
@@ -30,7 +30,7 @@ size_t HeapPage::end() const {
 
 bool HeapPage::insertTuple(const Tuple &t) {
     // TODO pa1
-    // bitwise or operator?
+    // bitwise or operator
 }
 
 void HeapPage::deleteTuple(size_t slot) {
@@ -40,6 +40,7 @@ void HeapPage::deleteTuple(size_t slot) {
 
 Tuple HeapPage::getTuple(size_t slot) const {
     // TODO pa1
+    // use name_to_pos? 
     
 }
 
