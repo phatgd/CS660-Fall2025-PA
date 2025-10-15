@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <unordered_set>
 #include <sys/stat.h>
+#include <db/types.hpp>
 
 using namespace db;
 
@@ -120,62 +121,33 @@ Tuple TupleDesc::deserialize(const uint8_t *data) const {
     // TODO pa1
     // @author Sam Gibson, Phat Duong
 
-    uint8_t *ptr_d = const_cast<uint8_t*>(data); // ptr to beginning of data bits
-    std::vector<field_t> fields; //empty fields for results
-    field_t *val; // value to be read
+    uint8_t *ptr_d = const_cast<uint8_t*>(data); // ptr to beginning of data bits, cast away const
+    std::vector<field_t> fields;//empty fields for results
 
     for (int i = 0; i < this->size(); i++){
         type_t this_type = field_types[i]; // type we are reading
         size_t this_size = field_sizes[i]; // size of data we are reading
+        field_t *val; // value to be read
 
-        std::memcpy(&val, ptr_d, this_size); // copy data into val
+        std::memcpy(val, ptr_d, this_size); // copy data into val
 
+        // check type and push into fields
         switch(this_type){
             case type_t::INT: 
-                fields.emplace_back(reinterpret_cast<int*>(val));
+                fields.emplace_back(*reinterpret_cast<int*>(val));
                 break;
             case type_t::DOUBLE:
-                fields.emplace_back(reinterpret_cast<double*>(val));
+                fields.emplace_back(*reinterpret_cast<double*>(val));
                 break;
             case type_t::CHAR:
-                fields.emplace_back(reinterpret_cast<std::string*>(val));
+                std::memset(&val, '\0', this_size); // make sure its null terminated
+                fields.emplace_back(*reinterpret_cast<std::string*>(val));
                 break;
         }
 
         ptr_d += this_size; // move ptr to next
     }
     return Tuple(fields); //return new Tuple with fields
-
-
-    // uint8_t* ptr_d = data; // point to beginning of bits
-
-    // go through each field, retrieve data
-    // for(int x = 0; x< field_types.size(); x++){
-        
-    //     type_t this_type = field_types[x]; // type we are reading
-    //     size_t this_size = field_sizes[x]; // size of data we are reading
-
-    //     if(this_type == type_t::INT){
-    //         // logic: take in x len data, push it into tuple, move pointer to next thing
-
-    //         // code from ta: 
-    //         // fields.emplace_back(reinterpret_cast<*int>)
-    //         ptr_d += this_size; // move ptr 
-    //     }
-    //     else if(this_type == type_t::DOUBLE){
-    //         // fields.emplace_back(reinterpret_cast<*double>)
-    //         ptr_d += this_size;
-    //     }
-    //     else if(this_type == type_t::CHAR){ // char
-    //         // chars different, need to read then trim empty at the end
-    //         // fields.emplace_back(reinterpret_cast<*char>)
-
-    //         ptr_d += this_size;
-    //     }
-    //     else{
-    //         throw std::logic_error("Bad values");
-    //     }
-    // }
 }
 
 void TupleDesc::serialize(uint8_t *data, const Tuple &t) const {
