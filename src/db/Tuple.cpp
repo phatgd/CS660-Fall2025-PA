@@ -120,7 +120,7 @@ Tuple TupleDesc::deserialize(const uint8_t *data) const {
     // TODO pa1
     // @author Sam Gibson
 
-    uint8_t* ptr_d = data; // point to beginning of bits
+    // uint8_t* ptr_d = data; // point to beginning of bits
 
     // go through each field, retrieve data
     // for(int x = 0; x< field_types.size(); x++){
