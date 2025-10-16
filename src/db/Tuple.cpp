@@ -140,7 +140,7 @@ Tuple TupleDesc::deserialize(const uint8_t *data) const {
                 fields.emplace_back(*reinterpret_cast<double*>(val));
                 break;
             case type_t::CHAR:
-                std::memset(&val, '\0', this_size); // make sure its null terminated
+                std::memset(val, '\0', this_size); // make sure its null terminated
                 fields.emplace_back(*reinterpret_cast<std::string*>(val));
                 break;
         }
