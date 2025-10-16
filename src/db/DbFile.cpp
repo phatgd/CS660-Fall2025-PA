@@ -9,29 +9,64 @@ using namespace db;
 const TupleDesc &DbFile::getTupleDesc() const { return td; }
 
 DbFile::DbFile(const std::string &name, const TupleDesc &td) : name(name), td(td) {
-    // TODO pa1: open file and initialize numPages
-    // Hint: use open, fstat
+    // @author Sam Gibson
+    
+    struct stat buffer;
+    int file_size;
 
-    // need int file descriptor
-    // If the file does not exist, it is created a new file with the given file name.
-    // numPages =  number of pages in the file
-    // A file should always have one page when it is created (even if it is empty).
+    if(fstat(fd, &buffer)){ // get stats on file
+        throw std::runtime_error("File can't be opened");
+    }
+    else{
+        file_size = buffer.st_size;
+    }
+
+    // may need fopen()
+    fd = open(name.c_str(), 2); // opens/ creates file at that location
+    if(fd == -1){
+        throw std::runtime_error("File can't be opened");
+    }
+
+    numPages = file_size/ DEFAULT_PAGE_SIZE; // initialize numPages
+
+    if(numPages == 0){ // always has at least one page even if empty
+        numPages++;
+    }
+    
 }
 
 DbFile::~DbFile() {
+    // @author Sam Gibson
+
     // TODO pa1: close file
     // Hind: use close
+
+    close(fd);
 }
 
 const std::string &DbFile::getName() const { return name; }
 
 void DbFile::readPage(Page &page, const size_t id) const {
+    // @author Sam Gibson
+
+    void* buf = &page; // void ptr for content
+    ssize_t results = pread(fd, buf, DEFAULT_PAGE_SIZE, id);
+    if(results < 0){
+        throw std::runtime_error("Couldn't read :O");
+    }
+    
     reads.push_back(id);
-    // TODO pa1: read page
-    // Hint: use pread
 }
 
 void DbFile::writePage(const Page &page, const size_t id) const {
+    // @author Sam Gibson
+
+    const void* buf = &page; // void ptr for content
+    ssize_t results = pwrite(fd, buf, DEFAULT_PAGE_SIZE, id);
+    if(results < 0){
+        throw std::runtime_error("Couldn't write :P");
+    }
+    
     writes.push_back(id);
     // TODO pa1: write page
     // Hint: use pwrite
