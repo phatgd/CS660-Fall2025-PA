@@ -121,10 +121,9 @@ size_t TupleDesc::size() const {
 Tuple TupleDesc::deserialize(const uint8_t *data) const {
     // TODO pa1
     // @author Sam Gibson, Phat Duong
-
-    // std::unique_ptr<const uint8_t*> ptr_d = std::make_unique<const uint8_t*>(data); // ptr to beginning of data bits
+    
     uint8_t *ptr_d = (uint8_t *) data; // ptr to beginning of data bits
-    auto t_fields = std::make_unique<std::vector<field_t>>();//empty fields for results
+    auto t_fields = std::vector<field_t>(); // vector to hold fields of new Tuple
 
     type_t this_type; // type we are reading
     size_t this_size; // size of data we are reading
@@ -137,32 +136,26 @@ Tuple TupleDesc::deserialize(const uint8_t *data) const {
 
         // allocate memory for val based on type
         val = (field_t *) malloc(this_size);
-
-
         std::memcpy(val, ptr_d, this_size); // copy data into val
 
         // check type and push into fields
         switch(this_type){
             case type_t::INT:
-                t_fields->emplace_back(*reinterpret_cast<int*>(val));
+                t_fields.emplace_back(*reinterpret_cast<int*>(val));
                 break;
             case type_t::DOUBLE:
-                t_fields->emplace_back(*reinterpret_cast<double*>(val));
+                t_fields.emplace_back(*reinterpret_cast<double*>(val));
                 break;
             case type_t::CHAR:
-                t_fields->emplace_back(std::string(reinterpret_cast<char*>(val)));
+                t_fields.emplace_back(std::string(reinterpret_cast<char*>(val)));
                 break;
         }
 
         free(val); // free val
         ptr_d += this_size; // move ptr to next
-        std::cout<<"Successfully deserialized i-th field: " << i << ", with size: " << this_size <<std::endl;
     }
     
-    // return Tuple(std::move(*t_fields)); //return new Tuple with fields
-    return Tuple(*t_fields); //return new Tuple with fields
-    // const std::vector<field_t> &t = std::vector<field_t>();
-    // return Tuple(t); //return new Tuple with fields
+    return Tuple(t_fields); //return new Tuple with fields
 }
 
 void TupleDesc::serialize(uint8_t *data, const Tuple &t) const {
