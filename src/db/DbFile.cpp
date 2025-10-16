@@ -9,25 +9,22 @@ using namespace db;
 const TupleDesc &DbFile::getTupleDesc() const { return td; }
 
 DbFile::DbFile(const std::string &name, const TupleDesc &td) : name(name), td(td) {
-    // @author Sam Gibson
+    // @author Sam Gibson, Phat Duong
     
     struct stat buffer;
-    int file_size;
 
-    if(fstat(fd, &buffer)){ // get stats on file
-        throw std::runtime_error("File can't be opened");
-    }
-    else{
-        file_size = buffer.st_size;
-    }
-
-    // may need fopen()
-    fd = open(name.c_str(), 2); // opens/ creates file at that location
-    if(fd == -1){
+    // open file and assign it to a unique file descriptor
+    f_desc = open(name.c_str(), O_RDWR | O_CREAT, S_IRWXU | S_IRWXG); 
+    if(f_desc == -1){
         throw std::runtime_error("File can't be opened");
     }
 
-    numPages = file_size/ DEFAULT_PAGE_SIZE; // initialize numPages
+    // get stats on file
+    if(fstat(f_desc, &buffer)){ 
+        throw std::runtime_error("File can't be opened");
+    }
+
+    numPages = buffer.st_size / DEFAULT_PAGE_SIZE; // initialize numPages
 
     if(numPages == 0){ // always has at least one page even if empty
         numPages++;
@@ -41,7 +38,7 @@ DbFile::~DbFile() {
     // TODO pa1: close file
     // Hind: use close
 
-    close(fd);
+    close(f_desc);
 }
 
 const std::string &DbFile::getName() const { return name; }
@@ -49,8 +46,8 @@ const std::string &DbFile::getName() const { return name; }
 void DbFile::readPage(Page &page, const size_t id) const {
     // @author Sam Gibson
 
-    void* buf = &page; // void ptr for content
-    ssize_t results = pread(fd, buf, DEFAULT_PAGE_SIZE, id);
+    // void* buf = &page; // void ptr for content
+    ssize_t results = pread(f_desc, &page, DEFAULT_PAGE_SIZE, id*DEFAULT_PAGE_SIZE);
     if(results < 0){
         throw std::runtime_error("Couldn't read :O");
     }
@@ -61,8 +58,8 @@ void DbFile::readPage(Page &page, const size_t id) const {
 void DbFile::writePage(const Page &page, const size_t id) const {
     // @author Sam Gibson
 
-    const void* buf = &page; // void ptr for content
-    ssize_t results = pwrite(fd, buf, DEFAULT_PAGE_SIZE, id);
+    // const void* buf = &page; // void ptr for content
+    ssize_t results = pwrite(f_desc, &page, DEFAULT_PAGE_SIZE, id*DEFAULT_PAGE_SIZE);
     if(results < 0){
         throw std::runtime_error("Couldn't write :P");
     }
