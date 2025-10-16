@@ -13,7 +13,7 @@ HeapPage::HeapPage(Page &page, const TupleDesc &td) : td(td) {
     capacity = std::floor((DEFAULT_PAGE_SIZE*8)/(td.length() * 8 + 1)); // number of slots in a page/ header
     header = page.data(); // begining of page
     data = header + (DEFAULT_PAGE_SIZE - td.length() * capacity); //  P − T ∗ C 
-    std::cout << "header is: " << (*(header+9/8) == 0) << "\n";
+    std::cout << "header is: " << ((header[51/8] >> (7-51%8)) & 1)  << "\n";
 }
 
 size_t HeapPage::begin() const {
@@ -78,5 +78,6 @@ void HeapPage::next(size_t &slot) const {
 
 bool HeapPage::empty(size_t slot) const {
      // @author Sam Gibson, Phat Duong
-    return *(header+slot/8) == '\0' || *(header+slot/8) == 0; // check if slot is empty
+    // slot = slot - 1; // adjust for 0 index
+    return *header == '\0' || ((header[slot/8] >> (7-slot%8)) & 1) == 0; // check if slot is empty
 }
