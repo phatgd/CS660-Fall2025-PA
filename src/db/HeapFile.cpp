@@ -25,9 +25,7 @@ void HeapFile::insertTuple(const Tuple &t) {
     // last page is full, create a new page
     Page new_page = {}; // zero-initialize new page
     HeapPage new_hp(new_page, td);
-    if (!new_hp.insertTuple(t)){
-        throw std::runtime_error("Failed to insert tuple into new page");
-    }
+    new_hp.insertTuple(t); // insert tuple to new page
 
     writePage(new_page, getNumPages()); // write new page to end of file
     numPages++; // increment number of pages
