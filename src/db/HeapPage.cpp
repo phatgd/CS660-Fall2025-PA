@@ -86,5 +86,5 @@ void HeapPage::next(size_t &slot) const {
 
 bool HeapPage::empty(size_t slot) const {
      // @author Phat Duong
-    return *header == '\0' || ((header[slot/8] >> (7-slot%8)) & 1) == 0; // check if slot is empty
+    return ((header[slot/8] >> (7-slot%8)) & 1) == 0; // check if slot is empty
 }
