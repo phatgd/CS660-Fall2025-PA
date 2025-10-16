@@ -59,21 +59,21 @@ bool HeapPage::insertTuple(const Tuple &t) {
 }
 
 void HeapPage::deleteTuple(size_t slot) {
-    // TODO pa1
-    // clear with bitwise and ~&
+    // @author Phat Duong
+    if (empty(slot)) {
+        throw std::logic_error("Slot is already empty");
+    }
 
+    // mark slot as empty in header
+    header[slot/8] &= ~(1 << (7-slot%8));
 }
 
 Tuple HeapPage::getTuple(size_t slot) const {
-    // TODO pa1
-
-    // ptr + page_size
-    // td.length * capacity
-
-    // data + slot * td.length
-    // deserialize
-
-    
+    // @author Phat Duong
+    if (empty(slot)) {
+        throw std::logic_error("Slot is empty");
+    }
+    return td.deserialize(data + slot * td.length());
 }
 
 void HeapPage::next(size_t &slot) const {

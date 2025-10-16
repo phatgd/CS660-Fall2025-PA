@@ -4,7 +4,8 @@
 #include <stdexcept>
 #include <unordered_set>
 #include <sys/stat.h>
-#include <db/types.hpp>
+#include <iostream>
+#include <memory>
 
 using namespace db;
 
@@ -121,33 +122,47 @@ Tuple TupleDesc::deserialize(const uint8_t *data) const {
     // TODO pa1
     // @author Sam Gibson, Phat Duong
 
-    uint8_t *ptr_d = const_cast<uint8_t*>(data); // ptr to beginning of data bits, cast away const
-    std::vector<field_t> fields;//empty fields for results
+    // std::unique_ptr<const uint8_t*> ptr_d = std::make_unique<const uint8_t*>(data); // ptr to beginning of data bits
+    uint8_t *ptr_d = (uint8_t *) data; // ptr to beginning of data bits
+    auto t_fields = std::make_unique<std::vector<field_t>>();//empty fields for results
 
-    for (int i = 0; i < this->size(); i++){
-        type_t this_type = field_types[i]; // type we are reading
-        size_t this_size = field_sizes[i]; // size of data we are reading
-        field_t *val; // value to be read
+    type_t this_type; // type we are reading
+    size_t this_size; // size of data we are reading
+    field_t *val;// new field to store data
+
+    for (int i = 0; i < this->size(); ++i){
+        
+        this_type = field_types[i]; // type we are reading
+        this_size = field_sizes[i]; // size of data we are reading
+
+        // allocate memory for val based on type
+        val = (field_t *) malloc(this_size);
+
 
         std::memcpy(val, ptr_d, this_size); // copy data into val
 
         // check type and push into fields
         switch(this_type){
-            case type_t::INT: 
-                fields.emplace_back(*reinterpret_cast<int*>(val));
+            case type_t::INT:
+                t_fields->emplace_back(*reinterpret_cast<int*>(val));
                 break;
             case type_t::DOUBLE:
-                fields.emplace_back(*reinterpret_cast<double*>(val));
+                t_fields->emplace_back(*reinterpret_cast<double*>(val));
                 break;
             case type_t::CHAR:
-                std::memset(val, '\0', this_size); // make sure its null terminated
-                fields.emplace_back(*reinterpret_cast<std::string*>(val));
+                t_fields->emplace_back(std::string(reinterpret_cast<char*>(val)));
                 break;
         }
 
+        free(val); // free val
         ptr_d += this_size; // move ptr to next
+        std::cout<<"Successfully deserialized i-th field: " << i << ", with size: " << this_size <<std::endl;
     }
-    return Tuple(fields); //return new Tuple with fields
+    
+    // return Tuple(std::move(*t_fields)); //return new Tuple with fields
+    return Tuple(*t_fields); //return new Tuple with fields
+    // const std::vector<field_t> &t = std::vector<field_t>();
+    // return Tuple(t); //return new Tuple with fields
 }
 
 void TupleDesc::serialize(uint8_t *data, const Tuple &t) const {
