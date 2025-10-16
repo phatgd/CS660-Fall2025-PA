@@ -2,6 +2,8 @@
 #include <db/HeapPage.hpp>
 #include <stdexcept>
 #include <cmath>
+#include <iostream>
+#include <array>
 
 using namespace db;
 
@@ -11,6 +13,7 @@ HeapPage::HeapPage(Page &page, const TupleDesc &td) : td(td) {
     capacity = std::floor((DEFAULT_PAGE_SIZE*8)/(td.length() * 8 + 1)); // number of slots in a page/ header
     header = page.data(); // begining of page
     data = header + (DEFAULT_PAGE_SIZE - td.length() * capacity); //  P − T ∗ C 
+    std::cout << "header is: " << (*(header+9/8) == 0) << "\n";
 }
 
 size_t HeapPage::begin() const {
@@ -30,7 +33,19 @@ size_t HeapPage::end() const {
 }
 
 bool HeapPage::insertTuple(const Tuple &t) {
-    // TODO pa1
+    // find empty slot
+    size_t slot = begin();
+
+    if (slot == capacity){ // full page
+        return false;
+    }
+
+    // serialize tuple into data
+    td.serialize(data + slot/8 * td.length(), t);
+    
+    // mark slot as used in header
+    *(header + slot) = 1;
+
     // bitwise or operator
 }
 
@@ -54,17 +69,14 @@ Tuple HeapPage::getTuple(size_t slot) const {
 void HeapPage::next(size_t &slot) const {
     // @author Sam Gibson
 
-    while(++slot < capacity && empty(slot)){ // iterate through slots in header
+    while(++slot < capacity && empty(slot)){
+        // std::cout << "slot number: " << slot << "; ";  // iterate through slots in header
     }
+    std::cout << "slot number: " << slot << "; ";  // iterate through slots in header
 
 }
 
 bool HeapPage::empty(size_t slot) const {
-     // @author Sam Gibson
-    if(header[slot] == 0){
-        return true;
-    }
-    else{
-        return false;
-    }
+     // @author Sam Gibson, Phat Duong
+    return *(header+slot/8) == '\0' || *(header+slot/8) == 0; // check if slot is empty
 }
