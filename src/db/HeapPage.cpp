@@ -35,16 +35,16 @@ size_t HeapPage::end() const {
 bool HeapPage::insertTuple(const Tuple &t) {
     // @author Phat Duong
 
-    // find first occupied slot
-    size_t slot = begin();
-
-    // full page
-    if (slot == 0){ 
-        return false;
+    size_t slot = -1;
+    // get first empty slot
+    for (size_t i = 0; i < capacity; i++){
+        if (empty(i)){
+            slot = i;
+            break;
+        }
     }
 
-    // get most recent empty slot
-    slot -= 1;
+    if (slot == -1) return false; // page is full
 
     // serialize tuple into data
     td.serialize((data + slot * td.length()), t);
@@ -61,6 +61,7 @@ bool HeapPage::insertTuple(const Tuple &t) {
 void HeapPage::deleteTuple(size_t slot) {
     // TODO pa1
     // clear with bitwise and ~&
+
 }
 
 Tuple HeapPage::getTuple(size_t slot) const {
@@ -86,5 +87,5 @@ void HeapPage::next(size_t &slot) const {
 
 bool HeapPage::empty(size_t slot) const {
      // @author Phat Duong
-    return *header == '\0' || ((header[slot/8] >> (7-slot%8)) & 1) == 0; // check if slot is empty
+    return ((header[slot/8] >> (7-slot%8)) & 1) == 0; // check if slot is empty
 }
