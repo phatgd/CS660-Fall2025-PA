@@ -9,13 +9,31 @@ using namespace db;
 const TupleDesc &DbFile::getTupleDesc() const { return td; }
 
 DbFile::DbFile(const std::string &name, const TupleDesc &td) : name(name), td(td) {
-    // TODO pa1: open file and initialize numPages
-    // Hint: use open, fstat
+    // @author Sam Gibson
+    
+    struct stat buffer;
+    int file_size;
 
-    // need int file descriptor
-    // If the file does not exist, it is created a new file with the given file name.
-    // numPages =  number of pages in the file
-    // A file should always have one page when it is created (even if it is empty).
+    if(fstat(fd, &buffer)){ // get stats on file
+        throw std::runtime_error("File can't be opened");
+    }
+    else{
+        file_size = buffer.st_size;
+    }
+
+    // may need fopen()
+    fd = open(name, 'w+'); // opens/ creates file at that location
+    if(fd == -1){
+        throw std::runtime_error("File can't be opened");
+    }
+
+    numPages = file_size/ DEFAULT_PAGE_SIZE; // initialize numPages
+
+    if(numPages == 0){ // always has at least one page even if empty
+        numPages++;
+    }
+
+    
 }
 
 DbFile::~DbFile() {
