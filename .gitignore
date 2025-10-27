@@ -30,3 +30,4 @@ Makefile
 # Project specific ignores
 docs/
 README.md
+*.zip
