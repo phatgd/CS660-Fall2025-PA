@@ -1,6 +1,7 @@
 #include <db/LeafPage.hpp>
 #include <stdexcept>
 #include <cmath>
+#include <string.h>
 
 using namespace db;
 
@@ -34,8 +35,11 @@ int LeafPage::split(LeafPage &new_page) {
   new_page.header->next_leaf = this -> header -> next_leaf;
   this -> header -> next_leaf = new_page.key_index;
   
-  // 
+  // split tuple
+  uint8_t *split_index = data + (new_page.header -> size) * td.length();
 
+  // move tuples in old page to new
+  memmove(new_page.data, split_index, (new_page.header -> size) * td.length());
   
 }
 
