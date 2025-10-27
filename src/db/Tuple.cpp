@@ -29,192 +29,136 @@ size_t Tuple::size() const { return fields.size(); }
 
 const field_t &Tuple::get_field(size_t i) const { return fields.at(i); }
 
-TupleDesc::TupleDesc(const std::vector<type_t> &types, const std::vector<std::string> &names) {
-    // @author Phat Duong
-
-    // Check lengths of names and types
+TupleDesc::TupleDesc(const std::vector<type_t> &types, const std::vector<std::string> &names) : types(types) {
+    // TODO pa1
     if (types.size() != names.size()) {
-        throw std::logic_error("must have same number of field names and types");
+        throw std::logic_error("Types and names sizes do not match");
     }
-
-    // Check for unique names
-    std::unordered_set<std::string> name_set;
-    for (const auto &name : names) {
-        if (!name_set.insert(name).second) {
-            throw std::logic_error("Names must be unique");
+    size_t offset = 0;
+    for (size_t i = 0; i < types.size(); i++) {
+        offsets.push_back(offset);
+        name_to_index[names[i]] = i;
+        switch (types[i]) {
+            case type_t::INT:
+                offset += INT_SIZE;
+                break;
+            case type_t::DOUBLE:
+                offset += DOUBLE_SIZE;
+                break;
+            case type_t::CHAR:
+                offset += CHAR_SIZE;
+                break;
         }
     }
-
-    // Populate schema with names and associated types
-    for (size_t i = 0; i < names.size(); ++i) {
-        name_to_pos[names[i]] = i;
-        field_names.push_back(names[i]);
-        field_types.push_back(types[i]);
-        field_sizes.push_back(
-            types[i] == type_t::INT ? INT_SIZE :
-            types[i] == type_t::DOUBLE ? DOUBLE_SIZE :
-            CHAR_SIZE
-        );
+    if (name_to_index.size() != names.size()) {
+        throw std::logic_error("Duplicate name");
     }
 }
 
 bool TupleDesc::compatible(const Tuple &tuple) const {
-    // @author Sam Gibson
-    // if different number of fields return false
-    if(this->size() != tuple.size()){
+    // TODO pa1
+    if (tuple.size() != types.size()) {
         return false;
     }
 
-    // compare each field
-    for(int x = 0; x < this->size(); x++){
-        if(this->field_types[x] != tuple.field_type(x)){
+    for (size_t i = 0; i < tuple.size(); i++) {
+        if (tuple.field_type(i) != types[i]) {
             return false;
         }
-    }  
+    }
 
     return true;
-    throw std::runtime_error("not implemented");
 }
 
 size_t TupleDesc::index_of(const std::string &name) const {
-    // @author Phat Duong
-
-    // Check if name exists
-    if (name_to_pos.find(name) == name_to_pos.end()) {
-        throw std::logic_error("Field name does not exist");
-    }
-    return name_to_pos.at(name);
+    // TODO pa1
+    return name_to_index.at(name);
 }
 
 size_t TupleDesc::offset_of(const size_t &index) const {
-    // @author Phat Duong
-
-    if (index >= field_names.size()) {
-        throw std::logic_error("Index out of bounds");
-    }
-
-    size_t offset = 0;
-    for (size_t i = 0; i < index; ++i) {
-        offset += field_sizes[i];
-    }
-    
-    return offset;
-
+    // TODO pa1
+    return offsets.at(index);
 }
 
 size_t TupleDesc::length() const {
-    // @author Sam Gibson
-    size_t sum = 0;
-
-    for(int x = 0; x< field_sizes.size(); x++){
-        sum += field_sizes[x];
+    // TODO pa1
+    size_t length = 0;
+    for (type_t type: types) {
+        switch (type) {
+            case type_t::INT:
+                length += INT_SIZE;
+                break;
+            case type_t::DOUBLE:
+                length += DOUBLE_SIZE;
+                break;
+            case type_t::CHAR:
+                length += CHAR_SIZE;
+                break;
+        }
     }
-
-    return sum;
+    return length;
 }
 
 size_t TupleDesc::size() const {
-    // @author Sam Gibson
-    return field_names.size();
+    // TODO pa1
+    return types.size();
 }
 
 Tuple TupleDesc::deserialize(const uint8_t *data) const {
     // TODO pa1
-    // @author Sam Gibson, Phat Duong
-    
-    uint8_t *ptr_d = (uint8_t *) data; // ptr to beginning of data bits
-    auto t_fields = std::vector<field_t>(); // vector to hold fields of new Tuple
-
-    type_t this_type; // type we are reading
-    size_t this_size; // size of data we are reading
-    field_t *val;// new field to store data
-
-    for (int i = 0; i < this->size(); ++i){
-        
-        this_type = field_types[i]; // type we are reading
-        this_size = field_sizes[i]; // size of data we are reading
-
-        // allocate memory for val based on type
-        val = (field_t *) malloc(this_size);
-        std::memcpy(val, ptr_d, this_size); // copy data into val
-
-        // check type and push into fields
-        switch(this_type){
+    std::vector<field_t> fields;
+    fields.reserve(types.size());
+    for (const type_t &type: types) {
+        switch (type) {
             case type_t::INT:
-                t_fields.emplace_back(*reinterpret_cast<int*>(val));
+                fields.emplace_back(*reinterpret_cast<const int *>(data));
+                data += INT_SIZE;
                 break;
             case type_t::DOUBLE:
-                t_fields.emplace_back(*reinterpret_cast<double*>(val));
+                fields.emplace_back(*reinterpret_cast<const double *>(data));
+                data += DOUBLE_SIZE;
                 break;
             case type_t::CHAR:
-                t_fields.emplace_back(std::string(reinterpret_cast<char*>(val)));
+                fields.emplace_back(std::string(reinterpret_cast<const char *>(data)));
+                data += CHAR_SIZE;
                 break;
         }
-
-        free(val); // free val
-        ptr_d += this_size; // move ptr to next
     }
-    
-    return Tuple(t_fields); //return new Tuple with fields
+    return {fields};
 }
 
 void TupleDesc::serialize(uint8_t *data, const Tuple &t) const {
-    // @author Sam Gibson
-   
-    // data written to this variable
-    uint8_t* ptr_d = data;
-
-    // iterate through entire tuple
-    for(int x = 0; x < field_types.size(); x++){
-        type_t this_type = field_types[x];
-        const field_t &content = t.get_field(x);
-
-        if(this_type == type_t::INT){
-            int v = std::get<int>(content);
-            size_t piece = INT_SIZE;
-
-            // save data and move ptr
-            std::memcpy(ptr_d, &v, piece);
-            ptr_d += piece;
-        }
-        else if(this_type == type_t::DOUBLE){
-            double v = std::get<double>(content);
-            size_t piece = DOUBLE_SIZE;
-
-            // save data and move ptr
-            std::memcpy(ptr_d, &v, piece);
-            ptr_d += piece;
-        }
-        else if(this_type == type_t::CHAR){ // char
-            std::string v = std::get<std::string>(content);
-            size_t piece = CHAR_SIZE;
-
-            std::memset(ptr_d, '\0', piece); // concat to fill entire space
-
-            // save data and move ptr
-            std::memcpy(ptr_d, &v, v.size());
-            ptr_d += piece;
-        }
-        else{
-            throw std::logic_error("Field value incorrect :(");
+    // TODO pa1
+    for (size_t i = 0; i < types.size(); i++) {
+        const type_t &type = types[i];
+        const field_t &field = t.get_field(i);
+        switch (type) {
+            case type_t::INT:
+                *reinterpret_cast<int *>(data) = std::get<int>(field);
+                data += INT_SIZE;
+                break;
+            case type_t::DOUBLE:
+                *reinterpret_cast<double *>(data) = std::get<double>(field);
+                data += DOUBLE_SIZE;
+                break;
+            case type_t::CHAR:
+                strncpy(reinterpret_cast<char *>(data), std::get<std::string>(field).c_str(), CHAR_SIZE);
+                data += CHAR_SIZE;
+                break;
         }
     }
 }
 
 db::TupleDesc TupleDesc::merge(const TupleDesc &td1, const TupleDesc &td2) {
-    // @author Phat Duong   
-
-    for (int i = 0; i < td2.size(); ++i) {
-        // Check for duplicate field namess
-        if (td1.name_to_pos.find(td2.field_names[i]) != td1.name_to_pos.end()) {
-            throw std::logic_error("Cannot merge TupleDescs with duplicate field names");
-        }
-
-        td1.field_names.push_back(td2.field_names[i]);
-        td1.field_types.push_back(td2.field_types[i]);
-        td1.field_sizes.push_back(td2.field_sizes[i]);
-        td1.name_to_pos[td2.field_names[i]] = td1.size() - 1;
+    // TODO pa1
+    std::vector<type_t> types(td1.types);
+    types.insert(types.end(), td2.types.begin(), td2.types.end());
+    std::vector<std::string> names(types.size());
+    for (const auto &[name, index]: td1.name_to_index) {
+        names[index] = name;
     }
-
-    return td1;
+    for (const auto &[name, index]: td2.name_to_index) {
+        names[td1.size() + index] = name;
+    }
+    return {types, names};
 }

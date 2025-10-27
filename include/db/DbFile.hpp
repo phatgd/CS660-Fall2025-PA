@@ -18,7 +18,7 @@ namespace db {
         mutable std::vector<size_t> writes;
 
         // TODO pa1: add private members
-        int f_desc; // file descriptor for the file
+        int fd;
 
     protected:
         const std::string name;

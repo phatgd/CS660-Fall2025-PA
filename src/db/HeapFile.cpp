@@ -8,118 +8,87 @@ using namespace db;
 HeapFile::HeapFile(const std::string &name, const TupleDesc &td) : DbFile(name, td) {}
 
 void HeapFile::insertTuple(const Tuple &t) {
-    // @author Phat Duong
-    if(!td.compatible(t)){
-        throw std::invalid_argument("Tuple is not compatible with TupleDesc");
+    // TODO pa1
+    if (!td.compatible(t)) {
+        throw std::runtime_error("Tuple not compatible with TupleDesc");
     }
-
-    Page page;
-    readPage(page, getNumPages()-1); // read last page
-    HeapPage hp(page, td);
-    
-    if (hp.insertTuple(t)){
-        writePage(page, getNumPages()-1); // write back to last page
-        return;
+    BufferPool &bufferPool = getDatabase().getBufferPool();
+    PageId pid{name, 0};
+    pid.page = numPages - 1;
+    Page &p = bufferPool.getPage(pid);
+    HeapPage hp(p, td);
+    if (!hp.insertTuple(t)) {
+        numPages++;
+        pid.page++;
+        Page &np = bufferPool.getPage(pid);
+        HeapPage nhp(np, td);
+        nhp.insertTuple(t);
     }
-
-    // last page is full, create a new page
-    Page new_page = {}; // zero-initialize new page
-    HeapPage new_hp(new_page, td);
-    if (!new_hp.insertTuple(t)){
-        throw std::runtime_error("Failed to insert tuple into new page");
-    }
-
-    writePage(new_page, getNumPages()); // write new page to end of file
-    numPages++; // increment number of pages
+    bufferPool.markDirty(pid);
 }
 
 void HeapFile::deleteTuple(const Iterator &it) {
-    // @author Phat Duong
-
-    if(it.page >= getNumPages()){
-        throw std::out_of_range("Iterator out of range of file");
-    }
-
-    Page page;
-    readPage(page, it.page);
-    HeapPage hp(page, td);
-
-    hp.getTuple(it.slot) = Tuple({}); // optional: clear the tuple data
+    // TODO pa1
+    BufferPool &bufferPool = getDatabase().getBufferPool();
+    PageId pid{name, it.page};
+    Page &p = bufferPool.getPage(pid);
+    HeapPage hp(p, td);
+    bufferPool.markDirty(pid);
     hp.deleteTuple(it.slot);
-
-    writePage(page, it.page); // write back to file
 }
 
 Tuple HeapFile::getTuple(const Iterator &it) const {
-    // @author Phat Duong
-
-    if(it.page >= getNumPages()){
-        throw std::out_of_range("Iterator out of range of file");
-    }
-
-    Page page;
-    readPage(page, it.page);
-    HeapPage hp(page, td);
-
+    // TODO pa1
+    BufferPool &bufferPool = getDatabase().getBufferPool();
+    PageId pid{name, it.page};
+    Page &p = bufferPool.getPage(pid);
+    HeapPage hp(p, td);
     return hp.getTuple(it.slot);
 }
 
 void HeapFile::next(Iterator &it) const {
-    // @author Phat Duong
-
-    // remember original page
-    // if we advance to a new page, set slot to beginning of that page
-    const size_t origin_page = it.page;
-
-    if(origin_page >= getNumPages()){
-        throw std::out_of_range("Iterator out of range of file");
-    }
-
-    // find next occupied slot
-    while (it.page < getNumPages()) {
-        Page page;
-        size_t &slot = it.slot;
-
-        readPage(page, it.page);
-        HeapPage hp(page, td);
-
-        // if we are on a new page, set slot to beginning
-        // else advance to next slot
-        if (origin_page != it.page){
-            slot = hp.begin();
-        } else {
-            hp.next(slot);
-        }
-        
-        // if current slot is not at the end, aka page is empty, return
-        if (slot != hp.end()) {
+    // TODO pa1
+    BufferPool &bufferPool = getDatabase().getBufferPool();
+    if (it.page < numPages) {
+        PageId pid{name, it.page};
+        Page &p = bufferPool.getPage(pid);
+        const HeapPage hp(p, td);
+        hp.next(it.slot);
+        if (it.slot != hp.end()) {
             return;
-        }        
-        
-        // otherwise advance to next page
-        it.slot = 0; // reset slot
-        ++it.page;
+        }
+        it.page++;
     }
+    while (it.page < numPages) {
+        PageId pid{name, it.page};
+        Page &p = bufferPool.getPage(pid);
+        const HeapPage hp(p, td);
+        it.slot = hp.begin();
+        if (it.slot != hp.end()) {
+            return;
+        }
+        it.page++;
+    }
+    it.slot = 0;
 }
 
 Iterator HeapFile::begin() const {
-    // @author Phat Duong
-
-    for (size_t page_num = 0; page_num < getNumPages(); ++page_num) {
-        Page page;
-        readPage(page, page_num);
-        HeapPage hp(page, td);
+    // TODO pa1
+    BufferPool &bufferPool = getDatabase().getBufferPool();
+    size_t page = 0;
+    while (page < numPages) {
+        PageId pid{name, page};
+        Page &p = bufferPool.getPage(pid);
+        const HeapPage hp(p, td);
         size_t slot = hp.begin();
-        if (slot != hp.end()) {
-            return Iterator(*this, page_num, slot);
-        }
+        if (slot != hp.end())
+            return {*this, page, slot};
+        page++;
     }
-
-    return end(); // no tuples in file
+    return {*this, numPages, 0};
 }
 
 Iterator HeapFile::end() const {
-    // @author Phat Duong
-
-    return Iterator(*this, getNumPages(), 0); // sentinel value, page is out of range
+    // TODO pa1
+    return {*this, numPages, 0};
 }

@@ -21,12 +21,10 @@ namespace db {
     };
 
     class TupleDesc {
-        mutable std::vector<type_t> field_types; //  types of each field
-        mutable std::vector<std::string> field_names; // names of fields
-
-        mutable std::vector<size_t> field_sizes; // vector of field type sizes (convert the type to bit size?)
-        mutable std::unordered_map<std::string, size_t> name_to_pos; // map from field name to field position
-
+        // TODO pa1: add private members
+        std::vector<type_t> types;
+        std::vector<size_t> offsets;
+        std::unordered_map<std::string, size_t> name_to_index;
 
     public:
         TupleDesc() = default;

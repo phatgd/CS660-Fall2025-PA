@@ -9,27 +9,20 @@ using namespace db;
 const TupleDesc &DbFile::getTupleDesc() const { return td; }
 
 DbFile::DbFile(const std::string &name, const TupleDesc &td) : name(name), td(td) {
-    // @author Sam Gibson, Phat Duong
-    
-    struct stat buffer;
-
-    // open file and assign it to a unique file descriptor
-    f_desc = open(name.c_str(), O_RDWR | O_CREAT, S_IRWXU | S_IRWXG); 
-    if(f_desc == -1){
-        throw std::runtime_error("File can't be opened");
+    // TODO pa1: open file and initialize numPages
+    // Hint: use open, fstat
+    fd = open(name.c_str(), O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+    if (fd == -1) {
+        throw std::runtime_error("open");
     }
-
-    // get stats on file
-    if(fstat(f_desc, &buffer)){ 
-        throw std::runtime_error("File can't be opened");
+    struct stat st{};
+    if (fstat(fd, &st) == -1) {
+        throw std::runtime_error("fstat");
     }
-
-    numPages = buffer.st_size / DEFAULT_PAGE_SIZE; // initialize numPages
-
-    if(numPages == 0){ // always has at least one page even if empty
-        numPages++;
+    numPages = st.st_size / DEFAULT_PAGE_SIZE;
+    if (numPages == 0) {
+        numPages = 1;
     }
-    
 }
 
 DbFile::~DbFile() {
@@ -37,8 +30,7 @@ DbFile::~DbFile() {
 
     // TODO pa1: close file
     // Hind: use close
-
-    close(f_desc);
+    close(fd);
 }
 
 const std::string &DbFile::getName() const { return name; }
@@ -53,6 +45,10 @@ void DbFile::readPage(Page &page, const size_t id) const {
     }
     
     reads.push_back(id);
+    // TODO pa1: read page
+    // Hint: use pread
+    std::fill(page.begin(), page.end(), 0);
+    pread(fd, page.data(), DEFAULT_PAGE_SIZE, id * DEFAULT_PAGE_SIZE);
 }
 
 void DbFile::writePage(const Page &page, const size_t id) const {
@@ -67,6 +63,7 @@ void DbFile::writePage(const Page &page, const size_t id) const {
     writes.push_back(id);
     // TODO pa1: write page
     // Hint: use pwrite
+    pwrite(fd, page.data(), DEFAULT_PAGE_SIZE, id * DEFAULT_PAGE_SIZE);
 }
 
 const std::vector<size_t> &DbFile::getReads() const { return reads; }
