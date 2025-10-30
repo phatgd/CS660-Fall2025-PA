@@ -26,8 +26,6 @@ DbFile::DbFile(const std::string &name, const TupleDesc &td) : name(name), td(td
 }
 
 DbFile::~DbFile() {
-    // @author Sam Gibson
-
     // TODO pa1: close file
     // Hind: use close
     close(fd);
@@ -36,14 +34,6 @@ DbFile::~DbFile() {
 const std::string &DbFile::getName() const { return name; }
 
 void DbFile::readPage(Page &page, const size_t id) const {
-    // @author Sam Gibson
-
-    // void* buf = &page; // void ptr for content
-    ssize_t results = pread(f_desc, &page, DEFAULT_PAGE_SIZE, id*DEFAULT_PAGE_SIZE);
-    if(results < 0){
-        throw std::runtime_error("Couldn't read :O");
-    }
-    
     reads.push_back(id);
     // TODO pa1: read page
     // Hint: use pread
@@ -52,14 +42,6 @@ void DbFile::readPage(Page &page, const size_t id) const {
 }
 
 void DbFile::writePage(const Page &page, const size_t id) const {
-    // @author Sam Gibson
-
-    // const void* buf = &page; // void ptr for content
-    ssize_t results = pwrite(f_desc, &page, DEFAULT_PAGE_SIZE, id*DEFAULT_PAGE_SIZE);
-    if(results < 0){
-        throw std::runtime_error("Couldn't write :P");
-    }
-    
     writes.push_back(id);
     // TODO pa1: write page
     // Hint: use pwrite
