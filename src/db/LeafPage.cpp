@@ -2,6 +2,8 @@
 #include <stdexcept>
 #include <cmath>
 #include <string.h>
+#include <iostream>
+#include <algorithm>
 
 using namespace db;
 
@@ -10,10 +12,15 @@ LeafPage::LeafPage(Page &page, const TupleDesc &td, size_t key_index) : td(td), 
 
   // page header is a LeafPageHeader
   header = reinterpret_cast<LeafPageHeader *>(page.data()); 
-
+ 
   // based on the remaining size of the page and the size of the tuples
-  capacity = (DEFAULT_PAGE_SIZE * 8 - page.size())/(td.length() * 8 + 1);
+  int empty_page_count = std::count(page.begin(), page.end(), 0);
+  capacity = empty_page_count*8/(td.length() * 8 + 1);
 
+  header -> size = DEFAULT_PAGE_SIZE - empty_page_count;
+  header -> next_leaf = 0; // initialize next leaf to 0
+  
+  // data starts after header
   data = page.data() + DEFAULT_PAGE_SIZE - td.length() * capacity;
 }
 
@@ -23,24 +30,29 @@ bool LeafPage::insertTuple(const Tuple &t) {
   // get key from tuple
   int key = std::get<int>(t.get_field(key_index));
 
-  // find position to insert
-  for (size_t pos=0; pos < header -> size; pos++) {
+  size_t slot = 0;
+
+  while(slot < header -> size) {
     // get current key
-    int current_key = std::get<int>(getTuple(pos).get_field(key_index));
+    int current_key = std::get<int>(getTuple(slot).get_field(key_index));
+
+    if (key < current_key) {
+      memmove(data + (slot + 1) * td.length(), data + slot * td.length(), (header -> size - slot) * td.length());
+      break;
+    }
 
     if (key == current_key) {
-      // replace existing tuple
-      td.serialize(data + pos * td.length(), t);
-    } else if (key < current_key) {
-      // shift tuples to make space
-      memmove(data + (pos + 1) * td.length(), data + pos * td.length(), (header -> size - pos) * td.length());
-      // insert new tuple
-      td.serialize(data + pos * td.length(), t);
-      header -> size += 1;
+      break;
     }
+    slot++;
   }
 
-  return header -> size > capacity;
+
+  td.serialize(data + slot * td.length(), t);
+  header -> size += 1;
+
+  std::cout << "end size: " << header -> size << std::endl;
+  return header -> size >= capacity;
 }
 
 int LeafPage::split(LeafPage &new_page) {
