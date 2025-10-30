@@ -12,20 +12,35 @@ LeafPage::LeafPage(Page &page, const TupleDesc &td, size_t key_index) : td(td), 
   header = reinterpret_cast<LeafPageHeader *>(page.data()); 
 
   // based on the remaining size of the page and the size of the tuples
-  capacity = (DEFAULT_PAGE_SIZE * 8 - page.size())/(td.length() * 8);
+  capacity = (DEFAULT_PAGE_SIZE * 8 - page.size())/(td.length() * 8 + 1);
 
   data = page.data() + DEFAULT_PAGE_SIZE - td.length() * capacity;
 }
 
 bool LeafPage::insertTuple(const Tuple &t) {
-  // TODO pa2
+  // @author Phat Duong
 
-  // isnert conditions
+  // get key from tuple
+  int key = std::get<int>(t.get_field(key_index));
 
-  // if space, insert done: size, add data
-  // if no space, split, then insert where belongs? 
-  // or insert into dummy then split that?
+  // find position to insert
+  for (size_t pos=0; pos < header -> size; pos++) {
+    // get current key
+    int current_key = std::get<int>(getTuple(pos).get_field(key_index));
 
+    if (key == current_key) {
+      // replace existing tuple
+      td.serialize(data + pos * td.length(), t);
+    } else if (key < current_key) {
+      // shift tuples to make space
+      memmove(data + (pos + 1) * td.length(), data + pos * td.length(), (header -> size - pos) * td.length());
+      // insert new tuple
+      td.serialize(data + pos * td.length(), t);
+      header -> size += 1;
+    }
+  }
+
+  return header -> size > capacity;
 }
 
 int LeafPage::split(LeafPage &new_page) {
@@ -51,5 +66,5 @@ int LeafPage::split(LeafPage &new_page) {
 
 Tuple LeafPage::getTuple(size_t slot) const {
   // @author Phat Duong
-  return td.deserialize(data+slot*td.length());
+  return td.deserialize(data + slot * td.length());
 }
