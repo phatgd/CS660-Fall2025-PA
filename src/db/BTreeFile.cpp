@@ -31,5 +31,5 @@ Iterator BTreeFile::begin() const {
 }
 
 Iterator BTreeFile::end() const {
-  // TODO pa2
+  return {*this, numPages, 0};
 }
