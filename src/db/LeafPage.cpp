@@ -18,8 +18,7 @@ LeafPage::LeafPage(Page &page, const TupleDesc &td, size_t key_index) : td(td), 
   capacity = empty_page_count*8/(td.length() * 8 + 1);
 
   header -> size = DEFAULT_PAGE_SIZE - empty_page_count;
-  header -> next_leaf = 0; // initialize next leaf to 0
-  
+
   // data starts after header
   data = page.data() + DEFAULT_PAGE_SIZE - td.length() * capacity;
 }
@@ -36,44 +35,43 @@ bool LeafPage::insertTuple(const Tuple &t) {
     // get current key
     int current_key = std::get<int>(getTuple(slot).get_field(key_index));
 
+    if (key == current_key) {
+      header -> size--;
+      break;
+    }
+
     if (key < current_key) {
+      // move tuples to make space
       memmove(data + (slot + 1) * td.length(), data + slot * td.length(), (header -> size - slot) * td.length());
       break;
     }
 
-    if (key == current_key) {
-      break;
-    }
     slot++;
   }
 
-
+  header -> size++;
   td.serialize(data + slot * td.length(), t);
-  header -> size += 1;
 
-  std::cout << "end size: " << header -> size << std::endl;
   return header -> size >= capacity;
 }
 
 int LeafPage::split(LeafPage &new_page) {
   // @author Sam Gibson, Phat Duong
 
-  // calc new size
-  uint16_t origin_size = header -> size;
 
-  this -> header -> size = std::ceil(origin_size/2);
-  new_page.header -> size = std::floor(origin_size/2);
+  new_page.header -> size = std::ceil(header->size/2.0);
+  header -> size = std::floor(header->size/2.0);
 
   // resetting next ptrs
   new_page.header->next_leaf = this -> header -> next_leaf;
-  this -> header -> next_leaf = new_page.key_index;
-  
+
   // split tuple
-  uint8_t *split_index = data + (new_page.header -> size) * td.length();
+  uint8_t *split_index = data + (header -> size) * td.length();
 
   // move tuples in old page to new
   memmove(new_page.data, split_index, (new_page.header -> size) * td.length());
-  
+
+  return std::get<int>(new_page.getTuple(0).get_field(key_index));
 }
 
 Tuple LeafPage::getTuple(size_t slot) const {
