@@ -3,7 +3,6 @@
 #include <cmath>
 #include <string.h>
 #include <iostream>
-#include <algorithm>
 
 using namespace db;
 
@@ -14,10 +13,9 @@ LeafPage::LeafPage(Page &page, const TupleDesc &td, size_t key_index) : td(td), 
   header = reinterpret_cast<LeafPageHeader *>(page.data()); 
  
   // based on the remaining size of the page and the size of the tuples
-  int empty_page_count = std::count(page.begin(), page.end(), 0);
-  capacity = empty_page_count*8/(td.length() * 8 + 1);
+  capacity = DEFAULT_PAGE_SIZE*8/(td.length() * 8 + 1);
 
-  header -> size = DEFAULT_PAGE_SIZE - empty_page_count;
+  header -> size = 0;
 
   // data starts after header
   data = page.data() + DEFAULT_PAGE_SIZE - td.length() * capacity;
