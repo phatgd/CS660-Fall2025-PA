@@ -13,7 +13,7 @@ LeafPage::LeafPage(Page &page, const TupleDesc &td, size_t key_index) : td(td), 
   header = reinterpret_cast<LeafPageHeader *>(page.data()); 
  
   // based on the remaining size of the page and the size of the tuples
-  capacity = DEFAULT_PAGE_SIZE*8/(td.length() * 8 + 1);
+  capacity = DEFAULT_PAGE_SIZE/td.length();
 
   header -> size = 0;
 
