@@ -3,6 +3,7 @@
 #include <db/Database.hpp>
 #include <db/IndexPage.hpp>
 #include <db/LeafPage.hpp>
+#include <list>
 #include <stdexcept>
 
 using namespace db;
@@ -19,13 +20,14 @@ void BTreeFile::insertTuple(const Tuple &t) {
 	int t_key = std::get<int>(t.get_field(key_index));
 
 	// list of parent index pages to update if split occurs
-	list<PageId> parent_pages = [];
+	std::list<PageId> parent_pages = {};
 
 	// use key to traverse tree from root to leaf
 	// get the root index page
 	PageId pid = PageId{name, root_id};
 	Page &p = bufferPool.getPage(pid);
-	IndexPage ip = IndexPage(p);
+	IndexPage root_ip = IndexPage(p);
+
 	parent_pages.push_front(pid);
 
 	// traverse until leaf page is reached
@@ -41,48 +43,66 @@ void BTreeFile::insertTuple(const Tuple &t) {
 			}
 		}
 		ip = IndexPage(p);
-	} while(!ip.header->index_children)
+	} while(!ip.header->index_children);
 	
 	// now at leaf page
 	LeafPage lp = LeafPage(p, td, key_index);
 
-	// insert tuple into leafpage
+	// insert tuple into leaf page
 	if (!lp.insertTuple(t)) {
 		return;
 	}
 
 	// Leaf page is full, need to split
-	Page &new_page = Page{};
+	Page new_page{};
 	db::LeafPage new_leaf_page = LeafPage(new_page, td, key_index);
 
 	int split_key = lp.split(new_leaf_page);
+
+	// Re-assign reference for next leaf
 	lp.header->next_leaf = numPages;
+	numPages++; 
 
 	// propagate split up to parent index page
-	PageId parent_pid = parent_pages.pop_front();
+	PageId parent_pid = parent_pages.front();
+	parent_pages.pop_front();
 	Page &parent_page = bufferPool.getPage(parent_pid);
 	IndexPage parent_ip = IndexPage(parent_page);
+	
+	//TODO: figure out children of parent
 
-	while(parent_ip.insert(split_key, numPages)){
+	// repeat until at root or no more split is needed
+	while(!parent_pages.empty() && parent_ip.insert(split_key, numPages)){
 		// parent index page is full, need to split
-		Page &new_index_page = Page{};
+		Page new_index_page{};
 		IndexPage new_ip = IndexPage(new_index_page);
 	
+		split_key = parent_ip.split(new_ip);
+		// move up to next parent
 
-		intsplit_key = parent_ip.split(new_ip);
-
-
-		if
+		parent_pid = parent_pages.front();
+		parent_pages.pop_front();
+		parent_page = bufferPool.getPage(parent_pid);
+		parent_ip = IndexPage(parent_page);
 	};
-	
-	numPages++;
 
- 
+	// if reached root, try insert
+	// TODO: HERE
+	if (parent_pages.empty()){
 
-	// repeat until no more split is needed or at root
+		// insert successful
+		if(!parent_ip.insert(split_key, numPages)){
+			return;
+		}
 
-		 // if root is split, create new root index page with two children
-		// reassign root id to new root page
+		// split root
+		Page new_root_page{};
+		IndexPage new_root_index = IndexPage(new_root_page);
+		split_key = parent_ip.split(new_root_index);
+		
+		new_root_index.children[0] = ;
+		new_root_index.children[1] = split_key;
+	} 
 	
 }
 
@@ -102,6 +122,8 @@ Tuple BTreeFile::getTuple(const Iterator &it) const {
 
 void BTreeFile::next(Iterator &it) const {
 	// @author Phat Duong
+	// TODO: This may be wrong
+
 	BufferPool &bufferPool = getDatabase().getBufferPool();
 	
 	
@@ -120,6 +142,7 @@ void BTreeFile::next(Iterator &it) const {
 
 Iterator BTreeFile::begin() const {
 	// @author Phat Duong
+	// TODO: This is definitely wrong
 	return {*this, root_id, 0};
 }
 
