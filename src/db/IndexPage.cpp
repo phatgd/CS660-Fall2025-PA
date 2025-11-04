@@ -13,6 +13,7 @@ IndexPage::IndexPage(Page &page) {
 
   // capacity = page size divided by size of (key + child) minus 1 extra key (because n keys have n+1 children)
   capacity = DEFAULT_PAGE_SIZE/(sizeof(int) + sizeof(size_t)) - 1;
+  
 
   // keys = new int[capacity];
   // children = new size_t[capacity + 1];
@@ -34,14 +35,14 @@ bool IndexPage::insert(int key, size_t child) {
 
   while(slot < header -> size) {
 
-    if (key < keys[slot]) {
-      // move keys and children to make space
-      memmove(children + slot + 2, children + slot + 1, (header -> size - slot) * sizeof(size_t));
-      memmove(keys + slot + 1, keys + slot, (header -> size - slot) * sizeof(int));
-      break;
-    }
+	if (key < keys[slot]) {
+	  // move keys and children to make space
+	  memmove(children + slot + 2, children + slot + 1, (header -> size - slot) * sizeof(size_t));
+	  memmove(keys + slot + 1, keys + slot, (header -> size - slot) * sizeof(int));
+	  break;
+	}
 
-    slot++;
+	slot++;
   }
 
   // insert key and child
