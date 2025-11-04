@@ -1,7 +1,8 @@
 #include <db/IndexPage.hpp>
 #include <stdexcept>
-#include <cstring>
 #include <iostream>
+#include <cmath>
+#include <string.h>
 
 using namespace db;
 
@@ -52,5 +53,24 @@ bool IndexPage::insert(int key, size_t child) {
 }
 
 int IndexPage::split(IndexPage &new_page) {
-  // TODO pa2
+  // @author Sam Gibson
+
+  // save middle key
+  int middle = keys[int(std::ceil(header->size/2.0))];
+
+  // get new headers 
+  new_page.header -> size = (header->size/2.0) + (header->size % 2) -1;
+  header -> size = (header->size/2.0);
+
+  // split key data
+  int *key_split = keys + header -> size+1;
+  memmove(new_page.keys, key_split, (new_page.header -> size) * (sizeof(int)));
+
+  // move children
+  size_t *child_split = children + header -> size+1;
+  memmove(new_page.children, children, (new_page.header -> size+1) * (sizeof(size_t)));
+
+
+  return middle;
+
 }
