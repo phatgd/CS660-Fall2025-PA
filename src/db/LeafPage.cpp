@@ -1,8 +1,6 @@
 #include <db/LeafPage.hpp>
 #include <stdexcept>
-#include <cmath>
 #include <string.h>
-#include <iostream>
 
 using namespace db;
 
@@ -56,9 +54,8 @@ bool LeafPage::insertTuple(const Tuple &t) {
 int LeafPage::split(LeafPage &new_page) {
   // @author Sam Gibson, Phat Duong
 
-
-  new_page.header -> size = std::ceil(header->size/2.0);
-  header -> size = std::floor(header->size/2.0);
+  new_page.header->size = (header->size / 2) + (header->size % 2);
+  header->size = header->size / 2;
 
   // resetting next ptrs
   new_page.header->next_leaf = this -> header -> next_leaf;
