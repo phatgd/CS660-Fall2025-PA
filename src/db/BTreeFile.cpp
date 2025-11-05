@@ -12,12 +12,12 @@ BTreeFile::BTreeFile(const std::string &name, const TupleDesc &td, size_t key_in
 		: DbFile(name, td), key_index(key_index) {}
 
 void BTreeFile::insertTuple(const Tuple &t) {
-	// // TODO pa2
+	// TODO pa2
 
-	// BufferPool &bufferPool = getDatabase().getBufferPool();
+	BufferPool &bufferPool = getDatabase().getBufferPool();
 
-	// // get key from tuple
-	// int t_key = std::get<int>(t.get_field(key_index));
+	// get key from tuple
+	int t_key = std::get<int>(t.get_field(key_index));
 
 	// list of parent index pages to update if split occurs
 	std::list<PageId> parent_pages = {};
@@ -26,8 +26,8 @@ void BTreeFile::insertTuple(const Tuple &t) {
 	// get the root index page
 	PageId pid = PageId{name, root_id};
 	Page &p = bufferPool.getPage(pid);
-	IndexPage root_ip = IndexPage(p);
-	IndexPage ip = root_ip
+	const IndexPage root_ip = IndexPage(p);
+	IndexPage ip = root_ip;
 
 	parent_pages.push_front(pid);
 
@@ -46,8 +46,8 @@ void BTreeFile::insertTuple(const Tuple &t) {
 		ip = IndexPage(p);
 	} while(!ip.header->index_children);
 	
-	// // now at leaf page
-	// LeafPage lp = LeafPage(p, td, key_index);
+	// now at leaf page
+	LeafPage lp = LeafPage(p, td, key_index);
 
 	// insert tuple into leaf page
 	if (!lp.insertTuple(t)) {
