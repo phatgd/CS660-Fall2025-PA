@@ -13,7 +13,7 @@ LeafPage::LeafPage(Page &page, const TupleDesc &td, size_t key_index) : td(td), 
 	// based on the remaining size of the page and the size of the tuples
 	capacity = DEFAULT_PAGE_SIZE/td.length();
 
-	header -> size = 0;
+	header -> size = (header -> size == '\0') ? 0 : header -> size;
 
 	// data starts after header
 	data = page.data() + DEFAULT_PAGE_SIZE - td.length() * capacity;
