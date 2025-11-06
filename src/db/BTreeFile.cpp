@@ -6,6 +6,8 @@
 #include <list>
 #include <stdexcept>
 
+#include <iostream>
+
 using namespace db;
 
 BTreeFile::BTreeFile(const std::string &name, const TupleDesc &td, size_t key_index)
@@ -25,25 +27,32 @@ void BTreeFile::insertTuple(const Tuple &t) {
 	// use key to traverse tree from root to leaf
 	// get the root index page
 	PageId pid = PageId{name, root_id};
-	Page p = bufferPool.getPage(pid);
-	const IndexPage &root_ip = IndexPage(p);
-	IndexPage current_ip = root_ip;
+	IndexPage root_ip = IndexPage(bufferPool.getPage(pid));
 
+	// get current index page
+	IndexPage current_ip = root_ip;
+	
+	// log for every 10000 calls
+	if (t_key % 1000 == 0) {
+		std::cout << "Inserting key: " << t_key << std::endl;
+		std::cout << "Number of pages before insertion: " << numPages << std::endl;
+	}
+	
 	// if tree is empty, create first Leaf page and assign it to children of root
 	if (numPages == 1){
 
 		// create new Leaf page and insert tuple
-		Page &new_leaf_page = bufferPool.getPage(PageId{name, numPages});
-		LeafPage lp = LeafPage(new_leaf_page, td, key_index);
-		bufferPool.markDirty(PageId{name, numPages});
+		pid.page = numPages;
+		LeafPage lp = LeafPage(bufferPool.getPage(pid), td, key_index);
 		lp.insertTuple(t);
+		bufferPool.markDirty(PageId{name, numPages});
 
 		// set root index page to point to new leaf
 		root_ip.keys[0] = std::get<int>(lp.getTuple(0).get_field(key_index));
 		root_ip.children[0] = numPages;
 
 		// set header data
-		// root_ip.header->size = 1;
+		// root_ip.header->size = 1; // it's a bold strategy cotton, let's see if it pays off for 'em
 		root_ip.header->index_children = false;
 
 		// increment page count
@@ -56,7 +65,7 @@ void BTreeFile::insertTuple(const Tuple &t) {
 		
 		// page p is index if it got here
 		if (!parent_pages.empty()) {
-			current_ip = IndexPage(p);
+			current_ip = IndexPage(bufferPool.getPage(pid));
 		}
 		parent_pages.push_front(pid);
 		
@@ -67,25 +76,30 @@ void BTreeFile::insertTuple(const Tuple &t) {
 				break;        
 			}
 		}
-
+		if (t_key % 1000 == 0) {
+			std::cout << "Going to index child page: " << current_ip.children[slot] << " at slot: " << slot << std::endl;
+		}
 		// move to child page
 		// if index_children is false, child page is leaf and we exit
 		pid.page = current_ip.children[slot];
-		p = bufferPool.getPage(pid);
 	}
 
 	// now at leaf page
-	LeafPage lp = LeafPage(p, td, key_index);
+	LeafPage lp = LeafPage(bufferPool.getPage(pid), td, key_index);
 	
 	// insert tuple into leaf page
-	bufferPool.markDirty(pid);
 	if (!lp.insertTuple(t)) {
+		bufferPool.markDirty(pid);
 		return;
 	}
 
+	bufferPool.markDirty(pid);
+	
+	// std::cout << "Leaf page full, need to split for key: " << t_key << std::endl;
+	
 	// Leaf page is full, need to split
-	Page new_page = bufferPool.getPage(PageId{name, numPages});
-	db::LeafPage new_leaf_page = LeafPage(new_page, td, key_index);
+	pid.page = numPages;
+	db::LeafPage new_leaf_page = LeafPage(bufferPool.getPage(pid), td, key_index);
 
 	int split_key = lp.split(new_leaf_page);
 
@@ -93,31 +107,66 @@ void BTreeFile::insertTuple(const Tuple &t) {
 	lp.header->next_leaf = numPages;
 	
 	// propagate split up to parent index page
+	
+	// since current_ip is now leaf's parent, we can pop from front
+	parent_pages.pop_front();
+
 	// repeat until at root or no more split is needed
-	while(!parent_pages.empty() && current_ip.insert(split_key, numPages)){
+	while(current_ip.insert(split_key, numPages)){
 		
 		numPages++;
 		
 		// parent index page is full, need to split
-		Page new_index_page = bufferPool.getPage(PageId{name, numPages});
-		IndexPage new_ip = IndexPage(new_index_page);
-		
+		pid.page = numPages;
+		IndexPage new_ip = IndexPage(bufferPool.getPage(pid));
+
 		// get split key to propagate up 
 		split_key = current_ip.split(new_ip);
 
+
+		// mark used pages as dirty
+		bufferPool.markDirty(parent_pages.front());
+		bufferPool.markDirty(pid);
+		
 		// move up to next parent
 		current_ip = IndexPage(bufferPool.getPage(parent_pages.front()));
+
+		// reassign index_children to true
+		current_ip.header->index_children = true;
+
+		// remove used parent page from list
 		parent_pages.pop_front();
+		
+		// if no more parent pages, we are at root
+		if (parent_pages.empty()) {
+			break;
+		}
 	};
 
 	// increment page count for new leaf page created.
 	numPages++;
 
-	// if parent_pages is not empty, that means insert was done without split
+	// if parent_pages is not empty, that means insert was done without splitting root
 	if(!parent_pages.empty()){
 		return;
 	}
-	
+
+	std::cout << "Inserted with root split, with key: "<< t_key << std::endl;
+
+	// root index page was split, need to reassign root
+	// since root_id = 0 is constant, we need to overide the contents of root page
+	root_ip.header->size = 0;
+
+	// yes I understand that this is bad
+	// no I do not care
+	// assign children to root_id roots
+	root_ip.children[0] = numPages;
+	root_ip.insert(split_key, numPages - 1);
+
+	// create new index page for old root contents (current_ip)
+	IndexPage new_root_child = IndexPage(bufferPool.getPage(PageId{name, numPages}));
+	new_root_child = current_ip;
+	numPages++;
 }	
 
 
@@ -139,37 +188,56 @@ void BTreeFile::next(Iterator &it) const {
 	// @author Phat Duong
 	// TODO: This may be wrong
 
-	BufferPool &bufferPool = getDatabase().getBufferPool();
-	
-	
-	while (it != end()) {
-		Page &p = bufferPool.getPage(PageId{name, it.page});
-		LeafPage lp(p, td, key_index);
-		
-		// if next leaf points to nothing, end
-		if (lp.header->next_leaf == '\0') {
-			it.page = numPages;
-			it.slot = 0;
-			return;
-		}
-
-		if (++it.slot < lp.header->size) {
-			return;
-		}
-
-		
-		it.page = lp.header->next_leaf;
-		it.slot = 0;
+	// log for every 1000 calls
+	if (it.page * it.slot % 1000 == 0) {
+		std::cout << "BTreeFile::next() called. Current position - Page: " << it.page << ", Slot: " << it.slot << std::endl;
 	}
+
+	BufferPool &bufferPool = getDatabase().getBufferPool();
+
+	LeafPage lp = LeafPage(bufferPool.getPage(PageId{name, it.page}), td, key_index);
+
+	// next slot in the same page
+	if (++it.slot < lp.header->size) {
+		return;
+	}
+
+	// if not same page then move to next leaf page
+	// if next leaf points to nothing, end
+	if (lp.header->next_leaf == '\0') {
+		it.page = numPages;
+		it.slot = 0;
+		return;
+	}
+
+	it.page = lp.header->next_leaf;
+	it.slot = -1; // will be incremented to 0 in next call
+	next(it);
 }
 
 Iterator BTreeFile::begin() const {
 	// @author Sam Gibson
+
+	BufferPool &bufferPool = getDatabase().getBufferPool();
 	size_t id = root_id;
 
-	Iterator root_iter = {*this, id, 0}; // point to root
-	next(root_iter); // get first entry 
-	return root_iter;
+	Page &root_page = bufferPool.getPage(PageId{name, id});
+	IndexPage parent_ip = IndexPage(root_page);
+	
+	while (parent_ip.header->index_children) {
+		// traverse to leftmost index child
+		id = parent_ip.children[0];
+		Page &child_page = bufferPool.getPage(PageId{name, id});
+		parent_ip = IndexPage(child_page);
+	}
+
+	// left most leaf children
+	// if no children, then tree is empty
+	// return end iterator
+	size_t leaf_id = parent_ip.header -> size == 0? numPages : parent_ip.children[0];
+
+	Iterator leaf_iter = {*this, leaf_id, 0}; // point to left most leaf
+	return leaf_iter;
 }
 
 Iterator BTreeFile::end() const {

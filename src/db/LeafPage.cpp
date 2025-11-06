@@ -2,6 +2,8 @@
 #include <stdexcept>
 #include <string.h>
 
+#include <iostream>
+
 using namespace db;
 
 LeafPage::LeafPage(Page &page, const TupleDesc &td, size_t key_index) : td(td), key_index(key_index) {
@@ -13,7 +15,8 @@ LeafPage::LeafPage(Page &page, const TupleDesc &td, size_t key_index) : td(td), 
 	// based on the remaining size of the page and the size of the tuples
 	capacity = DEFAULT_PAGE_SIZE/td.length();
 
-	header -> size = (header -> size == '\0') ? 0 : header -> size;
+	// std::cout<< "LeafPage size: " << header -> size << std::endl;
+ 	header -> size = (header -> size == '\0') ? 0 : header -> size;
 
 	// data starts after header
 	data = page.data() + DEFAULT_PAGE_SIZE - td.length() * capacity;
@@ -30,6 +33,7 @@ bool LeafPage::insertTuple(const Tuple &t) {
 	while(slot < header -> size) {
 		// get current key
 		int current_key = std::get<int>(getTuple(slot).get_field(key_index));
+		// std::cout << "Comparing with key: " << current_key << " with key: " << key << std::endl;
 
 		if (key == current_key) {
 			header -> size--;
@@ -45,6 +49,10 @@ bool LeafPage::insertTuple(const Tuple &t) {
 		slot++;
 	}
 
+	// if (header -> size + 1>= capacity) {
+	// 	std::cout << "size before insert: " << header -> size << ", inserting at slot: " << slot << std::endl;	
+	// 	std::cout << "insert key: " << key << std::endl;
+	// }
 	header -> size++;
 	td.serialize(data + slot * td.length(), t);
 
