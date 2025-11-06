@@ -17,7 +17,7 @@ IndexPage::IndexPage(Page &page) {
 	keys = reinterpret_cast<int *>(page.data() + DEFAULT_PAGE_SIZE - (sizeof(int) + sizeof(size_t)) * capacity - sizeof(size_t));
 
 	// children pointer starts after keys
-	children = reinterpret_cast<size_t *>(keys + capacity*sizeof(int));
+	children = reinterpret_cast<size_t *>(keys + capacity);
 
 	header -> size = (header -> size == '\0') ? 0 : header -> size;
 	// header -> index_children = false; // no index children proabably until after split
