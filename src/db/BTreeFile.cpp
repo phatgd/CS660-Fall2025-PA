@@ -6,16 +6,17 @@
 #include <list>
 #include <stdexcept>
 
-#include <iostream>
-
 using namespace db;
 
 BTreeFile::BTreeFile(const std::string &name, const TupleDesc &td, size_t key_index)
 		: DbFile(name, td), key_index(key_index) {}
 
 void BTreeFile::insertTuple(const Tuple &t) {
-	// TODO pa2
-	// std::cout << "=========================================" << std::endl;
+	// @author Phat Duong
+
+	if (!td.compatible(t)) {
+		throw std::logic_error("TupleDesc of tuple does not match TupleDesc of BTreeFile");
+	}
 
 	BufferPool &bufferPool = getDatabase().getBufferPool();
 
@@ -33,8 +34,6 @@ void BTreeFile::insertTuple(const Tuple &t) {
 
 	// get current index page
 	IndexPage current_ip = root_ip;
-	
-	// std::cout << "Inserting key: " << t_key << ", numPages: " << numPages  <<std::endl;
 
 	// if tree is empty, create first Leaf page and assign it to children of root
 	if (numPages == 1){
@@ -43,7 +42,6 @@ void BTreeFile::insertTuple(const Tuple &t) {
 		pid.page = numPages;
 		LeafPage lp = LeafPage(bufferPool.getPage(pid), td, key_index);
 		lp.insertTuple(t);
-		// lp.header -> next_leaf = '\0'; // no next leaf
 
 		bufferPool.markDirty(pid);
 
@@ -110,9 +108,6 @@ void BTreeFile::insertTuple(const Tuple &t) {
 	while(!parent_pages.empty() && current_ip.insert(split_key, numPages)){
 		
 		numPages++;
-
-		// std::cout << "Index page full, need to split for key: "<< t_key << std::endl;
-		// std::cout << "New index id: "<< numPages << std::endl;
 		
 		// parent index page is full, need to split
 		pid.page = numPages;
@@ -143,33 +138,23 @@ void BTreeFile::insertTuple(const Tuple &t) {
 		return;
 	}
 
-	// std::cout << "Inserting into root, with key: "<< t_key <<",and Page: "<< numPages-1<< std::endl;
-
 	// insert into root page
 	if (!current_ip.insert(split_key, numPages-1)) {
 		return;
 	}
 
-	std::cout << "Root is full, need to split at key: "<< t_key << ", and Page: " << numPages-1  << std::endl;
-	
 	// create new index page for old root contents (current_ip)
 	pid.page = numPages;
 	Page &root_left_child_page = bufferPool.getPage(pid);
-
-	// bufferPool.getPage(pid) = bufferPool.getPage(PageId{name, root_id}); // just to allocate the page
+	// move current root contents to new page
 	memmove(root_left_child_page.data(), root_page.data(), DEFAULT_PAGE_SIZE);
 	IndexPage root_child_left = IndexPage(root_left_child_page);
-
 
 	pid.page = numPages + 1;
 	IndexPage root_child_right = IndexPage(bufferPool.getPage(pid));
 
-	// std::cout << "Middle key of root: "<< root_child_left.keys[root_child_left.header->size/2] << std::endl;
 	// split current root index page into two new pages
 	split_key = root_child_left.split(root_child_right);
-
-	std::cout << "New root created with split key: " << split_key << std::endl;
-	// std::cout << "Right child page id: " << numPages + 1 <<" with left child: "<< root_child_right.children[0] << ", size: " << root_child_right.header->size << std::endl;
 
 	// root index page was split, need to reassign root
 	// since root_id = 0 is constant, we need to overide the contents of root page
