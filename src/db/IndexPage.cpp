@@ -20,7 +20,6 @@ IndexPage::IndexPage(Page &page) {
 	children = reinterpret_cast<size_t *>(page.data() + sizeof(IndexPageHeader) + capacity * sizeof(int));
 
 	header -> size = (header -> size == '\0') ? 0 : header -> size;
-	// header -> index_children = false; // no index children proabably until after split
 }
 
 bool IndexPage::insert(int key, size_t child) {
