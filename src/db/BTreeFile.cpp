@@ -84,11 +84,6 @@ void BTreeFile::insertTuple(const Tuple &t) {
 	if (!lp.insertTuple(t)) {
 		return;
 	}
-
-	if (pid.page == 340){
-		std::cout << "Right most child of parent: " << current_ip.children[current_ip.header->size] << std::endl;
-		std::cout << "next leaf page id for 340: "<< numPages << std::endl;
-	}
 	
 	// Leaf page is full, need to split
 	
@@ -189,18 +184,10 @@ Tuple BTreeFile::getTuple(const Iterator &it) const {
 
 void BTreeFile::next(Iterator &it) const {
 	// @author Phat Duong
-	// TODO: This may be wrong
 
 	BufferPool &bufferPool = getDatabase().getBufferPool();
 
 	LeafPage lp = LeafPage(bufferPool.getPage(PageId{name, it.page}), td, key_index);
-
-	// // log for every page called
-	// if (it.slot == 0 && it.page > 300) {
-	// 	std::cout << "==========================================" << std::endl;
-	// 	std::cout << "Current position - Page: " << it.page << ", First Leaf Key: " << std::get<int>(lp.getTuple(0).get_field(0)) << std::endl;
-	// 	std::cout << "Next leaf: "<< lp.header->next_leaf << std::endl;
-	// }
 
 	// next slot in the same page
 	if (++it.slot < lp.header->size) {
@@ -213,7 +200,6 @@ void BTreeFile::next(Iterator &it) const {
 	// if next leaf points to nothing, end
 	if (lp.header->next_leaf == '\0') {
 		it.page = numPages;
-		
 		return;
 	}
 
@@ -231,8 +217,6 @@ Iterator BTreeFile::begin() const {
 	
 	while (parent_ip.header->index_children) {
 		// traverse to leftmost index child
-		std::cout<<"Traversing to index child page: " << parent_ip.children[0] << std::endl;
-
 		id = parent_ip.children[0];
 		Page &child_page = bufferPool.getPage(PageId{name, id});
 		parent_ip = IndexPage(child_page);
@@ -242,8 +226,6 @@ Iterator BTreeFile::begin() const {
 	// check for empty tree
 	size_t leaf_id = numPages == 1 ? numPages : parent_ip.children[0];
 
-	std::cout<<"Left most leaf page id: " << leaf_id << std::endl;
-	// std::cout<<"Right most leaf page id: " << parent_ip.children[parent_ip.header->size - 1] << std::endl;
 	Iterator leaf_iter = {*this, leaf_id, 0}; // point to left most leaf
 	return leaf_iter;
 }
