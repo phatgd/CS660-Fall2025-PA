@@ -62,12 +62,14 @@ int IndexPage::split(IndexPage &new_page) {
 	// split key data
 	int *key_split = keys + middle + 1;
 	memmove(new_page.keys, key_split, (new_page.header -> size) * (sizeof(int)));
-	std::fill(key_split - 1 , key_split, 0); // optional: clear old keys
 
 	// move children
 	// children size stays the same as keys size + 1
-	size_t *child_split = children + middle;
+	size_t *child_split = children + middle + 1;
 	memmove(new_page.children, child_split, (new_page.header -> size + 1) * (sizeof(size_t)));
 
-	return keys[middle];
+	int result = keys[middle];
+	std::fill(key_split - 1 , key_split, '\0'); // optional: clear old keys
+
+	return result;
 }
