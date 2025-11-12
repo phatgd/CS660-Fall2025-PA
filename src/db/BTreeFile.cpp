@@ -61,7 +61,7 @@ void BTreeFile::insertTuple(const Tuple &t) {
 	while(current_ip.header->index_children || parent_pages.empty()) {
 		
 		current_ip = IndexPage(bufferPool.getPage(pid));
-		parent_pages.push_front(pid);
+		parent_pages.push_back(pid);
 		
 		size_t slot = 0;
 		for (;slot < current_ip.header->size; slot++) {
@@ -96,8 +96,8 @@ void BTreeFile::insertTuple(const Tuple &t) {
 
 	// propagate split up to parent index page
 	
-	// since current_ip is now leaf's parent, we can pop from front
-	parent_pages.pop_front();
+	// since current_ip is now leaf's parent, we can pop from back
+	parent_pages.pop_back();
 
 	// repeat until at root or no more split is needed
 	while(!parent_pages.empty() && current_ip.insert(split_key, numPages)){
@@ -112,17 +112,17 @@ void BTreeFile::insertTuple(const Tuple &t) {
 		split_key = current_ip.split(new_ip);
 	
 		// move up to next parent
-		current_ip = IndexPage(bufferPool.getPage(parent_pages.front()));
+		current_ip = IndexPage(bufferPool.getPage(parent_pages.back()));
 
 		// reassign index_children to true
 		current_ip.header->index_children = true;
 
 		// mark used pages as dirty
 		bufferPool.markDirty(pid);
-		bufferPool.markDirty(parent_pages.front());
+		bufferPool.markDirty(parent_pages.back());
 
 		// remove used parent page from list
-		parent_pages.pop_front();
+		parent_pages.pop_back();
 	};
 
 	// increment page count for new leaf page created.
