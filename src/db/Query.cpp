@@ -3,7 +3,18 @@
 using namespace db;
 
 void db::projection(const DbFile &in, DbFile &out, const std::vector<std::string> &field_names) {
-  // TODO: Implement this function
+  //
+  auto &in_td = in.getTupleDesc();
+
+  for(const auto &it : in){
+    std::vector<field_t> result_fields{};
+    for(auto &field: field_names){
+      result_fields.push_back(it.get_field(in_td.index_of(field)));
+    }
+
+    out.insertTuple(Tuple(result_fields));
+    
+  }
 }
 
 void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate> &pred) {
