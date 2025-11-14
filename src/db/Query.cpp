@@ -1,31 +1,5 @@
 #include <db/Query.hpp>
 #include <iostream>
-<<<<<<< HEAD
-
-using namespace db;
-
-
-bool operand_check(field_t field1, field_t field2, PredicateOp operation){
-  	// TODO: Implement this
-}
-
-void db::projection(const DbFile &in, DbFile &out, const std::vector<std::string> &field_names) {
-<<<<<<< HEAD
-	// @author Phat Duong, Sam Gibson
-  	std::cout<<"test debugging"<<std::endl;
-  	auto &result_td = in.getTupleDesc();
-	
-	for (const auto &it : in){
-		std::vector<field_t> result_fields{};
-		for (auto &field : field_names){
-			result_fields.push_back(it.get_field(result_td.index_of(field)));
-		}
-		Tuple result_tuple = Tuple(result_fields);
-		out.insertTuple(result_tuple);
- 	}
-=======
-  //
-=======
 #include <set>
 
 using namespace db;
@@ -54,7 +28,6 @@ bool predicate_results(db::PredicateOp op, field_t value, field_t comp){
 
 void db::projection(const DbFile &in, DbFile &out, const std::vector<std::string> &field_names) {
   //@author Phat Duong
->>>>>>> 752b863 (get empty case filter working)
   auto &in_td = in.getTupleDesc();
 
   for(const auto &it : in){
@@ -66,13 +39,9 @@ void db::projection(const DbFile &in, DbFile &out, const std::vector<std::string
     out.insertTuple(Tuple(result_fields));
     
   }
->>>>>>> 49298a3 (projection)
 }
 
 void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate> &pred) {
-<<<<<<< HEAD
-  	// TODO: Implement this function
-=======
   // TODO: Implement this function
   //@author Sam Gibson
   auto &in_td = in.getTupleDesc();
@@ -117,7 +86,6 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
 
 
   
->>>>>>> 752b863 (get empty case filter working)
 }
 
 void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
