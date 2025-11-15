@@ -44,23 +44,47 @@ void db::projection(const DbFile &in, DbFile &out, const std::vector<std::string
 }
 
 void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate> &pred) {
-  //@author Sam Gibson
+  // TODO: Implement this function
   auto &in_td = in.getTupleDesc();
 
-  // check for predicates
-  for(const auto &it : in){
-    bool pass = true;
-    for(auto &p: pred){
-      if(!predicate_results(p.op, it.get_field(in_td.index_of(p.field_name)), p.value)){
-        pass = false;
-        break;
+  // if empty add all to out
+  if(pred.empty()){
+    for(const auto &it : in){
+      std::vector<field_t> result_fields{};
+      for(int x = 0; x< it.size(); x++){
+        result_fields.push_back(it.get_field(x));
       }
+      
+      out.insertTuple(Tuple(result_fields));
+
     }
 
-    if (pass){
-      out.insertTuple(it);
-    }
   }
+  else{
+    // check what columns filters are on
+    std::set<std::string> cols{};
+    
+    for(auto &p: pred){
+      cols.insert(p.field_name);
+    }
+
+    for(const auto &it : in){
+      std::vector<field_t> result_fields{};
+      // if not empty loop through and check stuff
+      for(auto &p: pred){
+        if(predicate_results(p.op, p.value, it.get_field(in_td.index_of(p.field_name)))){
+          result_fields.push_back(it.get_field(in_td.index_of(p.field_name)));
+        }
+      }
+    
+      out.insertTuple(Tuple(result_fields));
+      
+    }
+    
+  }
+
+
+  
 }
 
 void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
