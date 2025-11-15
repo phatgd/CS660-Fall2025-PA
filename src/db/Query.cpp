@@ -62,7 +62,7 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
   else{
     // check what columns filters are on
     std::set<std::string> cols{};
-    
+
     for(auto &p: pred){
       cols.insert(p.field_name);
     }
@@ -88,8 +88,59 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
 
 void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
   // TODO: Implement this function
+
+  /*
+    
+    if no grouping: {
+      count, answ;
+      for entire tuple{
+        if COUNT or avg:
+          count ++
+        if min:
+          answ get changed if it is less than current
+        if max:
+          answ get changed if bigger than current
+        if sum or avg:
+          answ += value;
+        }
+        if avg: 
+        answ = answ/count;
+          
+        push answer
+        answ = 0;
+        count = 0;
+    }
+    if grouping isn't empty:{
+        nested loop:
+        answ; 
+        count;
+        for each group{
+          for within each group{
+            if COUNT or avg:
+              count ++
+            if min:
+              answ get changed if it is less than current
+            if max:
+              answ get changed if bigger than current
+            if sum or avg:
+              answ += value;
+          }
+          if avg: 
+          answ = answ/count;
+          
+          push answer
+          answ = 0;
+          count = 0;
+        }
+                
+    }
+  */
 }
 
 void db::join(const DbFile &left, const DbFile &right, DbFile &out, const JoinPredicate &pred) {
   // TODO: Implement this function
+
+  /*
+  
+  */
 }
