@@ -63,7 +63,7 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
   else{
     // check what columns filters are on
     std::set<std::string> cols{};
-    
+
     for(auto &p: pred){
       cols.insert(p.field_name);
     }
