@@ -89,6 +89,35 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
 void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
   // TODO: Implement this function
 
+  auto &in_td = in.getTupleDesc();
+
+  // if no grouping
+  if(agg.group.empty()){
+    auto op = agg.op; 
+
+    field_t count;
+    field_t answ;
+    for(auto &it: in){
+      switch(op){
+        case db::AggregateOp::SUM:
+          // do i have to handle different types :,) 
+          answ = answ + it.get_field(in_td.index_of(agg.field));
+        case db::AggregateOp::AVG:
+          return;
+          count += 1;
+        case db::AggregateOp::MIN:
+          if(answ <= it.get_field(in_td.index_of(agg.field))){
+            answ = it.get_field(in_td.index_of(agg.field));
+          }
+        case db::AggregateOp::MAX:
+          it.get_field(in_td.index_of(agg.field));
+        case db::AggregateOp::COUNT:
+          count ++;
+      }
+    }
+
+
+  }
   /*
     
     if no grouping: {
