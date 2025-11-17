@@ -5,6 +5,8 @@
 using namespace db;
 
 // function to process predicates
+// takes in predicateOp for comparison
+// returns true or false dep on comparison
 //@author Sam Gibson
 bool predicate_results(db::PredicateOp op, field_t value, field_t comp){
   switch(op){
@@ -24,7 +26,6 @@ bool predicate_results(db::PredicateOp op, field_t value, field_t comp){
       return false;
   }
 }
-
 
 void db::projection(const DbFile &in, DbFile &out, const std::vector<std::string> &field_names) {
   //@author Phat Duong
@@ -46,7 +47,6 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
   //@author Sam Gibson
   auto &in_td = in.getTupleDesc();
 
-  // if empty add all to out
   if(pred.size() == 0){
     for(const auto &it : in){
       std::vector<field_t> result_fields{};
@@ -59,33 +59,20 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
   else{ // if not empty loop through and check stuff
     for(const auto &it : in){
       std::vector<field_t> result_fields{};
-      bool pass = true;
+      bool pass = true; // if all conditions are true
       
-      // if any of the predicates fail for the tuple it fails
-      for(auto &p: pred){
-        if(predicate_results(p.op, p.value, it.get_field(in_td.index_of(p.field_name)))){
-          result_fields.push_back(it.get_field(in_td.index_of(p.field_name)));
-          std::cout<< pass<< ": push_back";
-        }
-        else{
-          pass= false;
+      for(const auto &p: pred){
+        if(!(pass = predicate_results(p.op, p.value, it.get_field(in_td.index_of(p.field_name))))){
           break;
         }
-        
+        result_fields.push_back(it.get_field(in_td.index_of(p.field_name)));
       }
-
-      // only push back if all things match, so all need to be true
-      if(pass == true){
+      if(pass){
         out.insertTuple(Tuple(result_fields));
         std::cout<< pass<< ": pushed";
       }
-          
     }
   }
-  
-
-
-  
 }
 
 void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
