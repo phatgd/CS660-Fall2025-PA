@@ -20,8 +20,9 @@ bool predicate_results(db::PredicateOp op, field_t value, field_t comp){
       return value > comp;
     case db::PredicateOp::GE:
       return value >= comp;
+    default:
+      return false;
   }
-  return false;
 }
 
 
@@ -42,6 +43,7 @@ void db::projection(const DbFile &in, DbFile &out, const std::vector<std::string
 
 void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate> &pred) {
   // TODO: Implement this function
+  //@author Sam Gibson
   auto &in_td = in.getTupleDesc();
 
   // if empty add all to out
@@ -54,20 +56,28 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
       out.insertTuple(Tuple(result_fields));
     }
   }
-  else{
+  else{ // if not empty loop through and check stuff
     for(const auto &it : in){
       std::vector<field_t> result_fields{};
-      // if not empty loop through and check stuff
       bool pass = true;
+      
+      // if any of the predicates fail for the tuple it fails
       for(auto &p: pred){
-        // if any of the predicates fail for the tuple it fails
-        pass = predicate_results(p.op, p.value, it.get_field(in_td.index_of(p.field_name)));
-        result_fields.push_back(p.field_name);
+        if(predicate_results(p.op, p.value, it.get_field(in_td.index_of(p.field_name)))){
+          result_fields.push_back(it.get_field(in_td.index_of(p.field_name)));
+          std::cout<< pass<< ": push_back";
+        }
+        else{
+          pass= false;
+          break;
+        }
+        
       }
 
       // only push back if all things match, so all need to be true
       if(pass == true){
         out.insertTuple(Tuple(result_fields));
+        std::cout<< pass<< ": pushed";
       }
           
     }
