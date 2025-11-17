@@ -45,6 +45,7 @@ void db::projection(const DbFile &in, DbFile &out, const std::vector<std::string
 
 void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate> &pred) {
   // TODO: Implement this function
+  //@author Sam Gibson
   auto &in_td = in.getTupleDesc();
 
   // if empty add all to out
