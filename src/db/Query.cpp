@@ -20,8 +20,6 @@ bool predicate_results(db::PredicateOp op, field_t value, field_t comp){
       return value > comp;
     case db::PredicateOp::GE:
       return value >= comp;
-    default:
-      return false;
   }
   return false;
 }
@@ -47,40 +45,34 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
   auto &in_td = in.getTupleDesc();
 
   // if empty add all to out
-  if(pred.empty()){
+  if(pred.size() == 0){
     for(const auto &it : in){
       std::vector<field_t> result_fields{};
       for(int x = 0; x< it.size(); x++){
         result_fields.push_back(it.get_field(x));
       }
-      
       out.insertTuple(Tuple(result_fields));
-
     }
-
   }
   else{
-    // check what columns filters are on
-    std::set<std::string> cols{};
-
-    for(auto &p: pred){
-      cols.insert(p.field_name);
-    }
-
     for(const auto &it : in){
       std::vector<field_t> result_fields{};
       // if not empty loop through and check stuff
+      bool pass = true;
       for(auto &p: pred){
-        if(predicate_results(p.op, p.value, it.get_field(in_td.index_of(p.field_name)))){
-          result_fields.push_back(it.get_field(in_td.index_of(p.field_name)));
-        }
+        // if any of the predicates fail for the tuple it fails
+        pass = predicate_results(p.op, p.value, it.get_field(in_td.index_of(p.field_name)));
+        result_fields.push_back(p.field_name);
       }
-    
-      out.insertTuple(Tuple(result_fields));
-      
+
+      // only push back if all things match, so all need to be true
+      if(pass == true){
+        out.insertTuple(Tuple(result_fields));
+      }
+          
     }
-    
   }
+  
 
 
   
@@ -89,35 +81,35 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
 void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
   // TODO: Implement this function
 
-  auto &in_td = in.getTupleDesc();
+  // auto &in_td = in.getTupleDesc();
 
-  // if no grouping
-  if(agg.group.empty()){
-    auto op = agg.op; 
+  // // if no grouping
+  // if(agg.group.empty()){
+  //   auto op = agg.op; 
 
-    field_t count;
-    field_t answ;
-    for(auto &it: in){
-      switch(op){
-        case db::AggregateOp::SUM:
-          // do i have to handle different types :,) 
-          answ = answ + it.get_field(in_td.index_of(agg.field));
-        case db::AggregateOp::AVG:
-          return;
-          count += 1;
-        case db::AggregateOp::MIN:
-          if(answ <= it.get_field(in_td.index_of(agg.field))){
-            answ = it.get_field(in_td.index_of(agg.field));
-          }
-        case db::AggregateOp::MAX:
-          it.get_field(in_td.index_of(agg.field));
-        case db::AggregateOp::COUNT:
-          count ++;
-      }
-    }
+  //   field_t count;
+  //   field_t answ;
+  //   for(auto &it: in){
+  //     switch(op){
+  //       case db::AggregateOp::SUM:
+  //         // do i have to handle different types :,) 
+  //         answ = answ + it.get_field(in_td.index_of(agg.field));
+  //       case db::AggregateOp::AVG:
+  //         return;
+  //         count += 1;
+  //       case db::AggregateOp::MIN:
+  //         if(answ <= it.get_field(in_td.index_of(agg.field))){
+  //           answ = it.get_field(in_td.index_of(agg.field));
+  //         }
+  //       case db::AggregateOp::MAX:
+  //         it.get_field(in_td.index_of(agg.field));
+  //       case db::AggregateOp::COUNT:
+  //         count ++;
+  //     }
+  //   }
 
 
-  }
+  // }
   /*
     
     if no grouping: {
