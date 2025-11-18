@@ -1,6 +1,8 @@
 #include <db/Query.hpp>
 #include <iostream>
 #include <set>
+#include <list>
+
 
 using namespace db;
 
@@ -42,50 +44,31 @@ void db::projection(const DbFile &in, DbFile &out, const std::vector<std::string
 }
 
 void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate> &pred) {
-  // TODO: Implement this function
   //@author Sam Gibson
   auto &in_td = in.getTupleDesc();
 
   // if empty add all to out
   if(pred.size() == 0){
     for(const auto &it : in){
-      std::vector<field_t> result_fields{};
-      for(int x = 0; x< it.size(); x++){
-        result_fields.push_back(it.get_field(x));
+      out.insertTuple(it);
+    }
+    return;
+  }
+
+  // check for predicates
+  for(const auto &it : in){
+    bool pass = true;
+    for(auto &p: pred){
+      if(!predicate_results(p.op, it.get_field(in_td.index_of(p.field_name)), p.value)){
+        pass = false;
+        break;
       }
-      out.insertTuple(Tuple(result_fields));
+    }
+
+    if (pass){
+      out.insertTuple(it);
     }
   }
-  else{ // if not empty loop through and check stuff
-    for(const auto &it : in){
-      std::vector<field_t> result_fields{};
-      bool pass = true;
-      
-      // if any of the predicates fail for the tuple it fails
-      for(auto &p: pred){
-        if(predicate_results(p.op, p.value, it.get_field(in_td.index_of(p.field_name)))){
-          result_fields.push_back(it.get_field(in_td.index_of(p.field_name)));
-          std::cout<< pass<< ": push_back";
-        }
-        else{
-          pass= false;
-          break;
-        }
-        
-      }
-
-      // only push back if all things match, so all need to be true
-      if(pass == true){
-        out.insertTuple(Tuple(result_fields));
-        std::cout<< pass<< ": pushed";
-      }
-          
-    }
-  }
-  
-
-
-  
 }
 
 void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
