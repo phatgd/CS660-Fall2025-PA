@@ -47,14 +47,6 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
   //@author Sam Gibson
   auto &in_td = in.getTupleDesc();
 
-  // if empty add all to out
-  if(pred.size() == 0){
-    for(const auto &it : in){
-      out.insertTuple(it);
-    }
-    return;
-  }
-
   // check for predicates
   for(const auto &it : in){
     bool pass = true;
