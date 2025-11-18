@@ -33,23 +33,23 @@ bool predicate_results(db::PredicateOp op, field_t value, field_t comp){
 
 //@author Sam Gibson
 void agg_operations(db::AggregateOp op, std::vector<double> stuff, double &answ){
-  switch(op){
-    case db::AggregateOp::SUM:
-      answ = accumulate(stuff.first(), stuff.last(), 0);
-      break;
-    case db::AggregateOp::AVG:
-      answ = accumulate(stuff.first(), stuff.last(), 0)/ stuff.size();
-      break;
-    case db::AggregateOp::MIN:
-      answ = *min_element(stuff.begin(), stuff.end());
-      break;
-    case db::AggregateOp::MAX:
-      answ = *max_element(stuff.begin(), stuff.end());
-      break;
-    case db::AggregateOp::COUNT:
-      answ = stuff.size();
-      break;
-  }
+  // switch(op){
+  //   case db::AggregateOp::SUM:
+  //     answ = accumulate(stuff.first(), stuff.last(), 0);
+  //     break;
+  //   case db::AggregateOp::AVG:
+  //     answ = accumulate(stuff.first(), stuff.last(), 0)/ stuff.size();
+  //     break;
+  //   case db::AggregateOp::MIN:
+  //     answ = *min_element(stuff.begin(), stuff.end());
+  //     break;
+  //   case db::AggregateOp::MAX:
+  //     answ = *max_element(stuff.begin(), stuff.end());
+  //     break;
+  //   case db::AggregateOp::COUNT:
+  //     answ = stuff.size();
+  //     break;
+  // }
 }
 
 void db::projection(const DbFile &in, DbFile &out, const std::vector<std::string> &field_names) {
@@ -74,7 +74,7 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
   for(const auto &it : in){
     bool pass = true; // if all conditions are true
     for(const auto &p: pred){
-      if(!predicate_results(p.op, p.value, it.get_field(in_td.index_of(p.field_name)))){
+      if(!predicate_results(p.op, it.get_field(in_td.index_of(p.field_name)), p.value)){
         pass = false;
         break;
       }
@@ -88,29 +88,29 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
 }
 
 void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
-  //@author Sam Gibson
-  auto &in_td = in.getTupleDesc();
-  std::vector<field_t> result_fields{}; // save for results
+  // //@author Sam Gibson
+  // auto &in_td = in.getTupleDesc();
+  // std::vector<field_t> result_fields{}; // save for results
 
 
-  std::unordered_map<std::string, std::vector<double>> blob = {};
-  blob['none'] = std::vector<double>(); // insert no group array
+  // std::unordered_map<std::string, std::vector<double>> blob = {};
+  // blob['none'] = std::vector<double>(); // insert no group array
 
 
-  for(auto &it: in){
-    if(!agg.group){
-      blob['none'].push_back(it.get_field(in_td.index_of(agg.field)));
-    }
-    else{
-      blob[it.get_field(in_td.index_of(*agg.group))].push_back(it.get_field(in_td.index_of(agg.field)));
-    }
-  }
+  // for(auto &it: in){
+  //   if(!agg.group){
+  //     blob['none'].push_back(it.get_field(in_td.index_of(agg.field)));
+  //   }
+  //   else{
+  //     blob[it.get_field(in_td.index_of(*agg.group))].push_back(it.get_field(in_td.index_of(agg.field)));
+  //   }
+  // }
 
-  if(agg.group){
-    for(int x = 0; x< blob.size(); x++){
+  // if(agg.group){
+  //   for(int x = 0; x< blob.size(); x++){
       
-    }
-  }
+  //   }
+  // }
    
 }
 
