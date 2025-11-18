@@ -151,10 +151,53 @@ void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
   */
 }
 
-void db::join(const DbFile &left, const DbFile &right, DbFile &out, const JoinPredicate &pred) {
-  // TODO: Implement this function
 
-  /*
-  
-  */
+/**
+ * @brief function to merge two tuples
+ * @param tuple_1 the first tuple
+ * @param tuple_2 the second tuple
+ * @param exclude_index the index to exclude from tuple_2
+ * @return the tuple that is merged from tuple_1 and tuple_2
+ */
+Tuple merge_tuple(const Tuple &tuple_1, const Tuple &tuple_2, size_t exclude_index){
+  // @author Phat Duong
+
+  std::vector<field_t> merged_fields {};
+  for (size_t i = 0; i<tuple_1.size(); i++){
+    merged_fields.push_back(tuple_1.get_field(i));
+  }
+
+  for (size_t i = 0; i<tuple_2.size(); i++){
+    if (i == exclude_index){
+      continue;
+    }
+    merged_fields.push_back(tuple_2.get_field(i));
+  }
+
+  return Tuple(merged_fields);
+}
+
+void db::join(const DbFile &left, const DbFile &right, DbFile &out, const JoinPredicate &pred) {
+  // @author Phat Duong
+  TupleDesc left_td = left.getTupleDesc();
+  TupleDesc right_td = right.getTupleDesc();
+
+  size_t exclude_index = -1;
+
+  if (pred.op == PredicateOp::EQ){
+    exclude_index = right_td.index_of(pred.right);
+  }
+
+  for(const auto &left_tuple : left){
+    for(const auto &right_tuple : right){
+      size_t right_field_index = right_td.index_of(pred.right);
+      if(predicate_results(
+        pred.op, 
+        left_tuple.get_field(left_td.index_of(pred.left)),
+        right_tuple.get_field(right_td.index_of(pred.right))
+      )){
+        out.insertTuple(merge_tuple(left_tuple, right_tuple, exclude_index));
+      };
+    }
+  }
 }
