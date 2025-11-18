@@ -3,6 +3,7 @@
 #include <set>
 #include <list>
 
+#include <unordered_map>
 
 using namespace db;
 
@@ -94,83 +95,75 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
 }
 
 void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
-  // TODO: Implement this function
-
-  // auto &in_td = in.getTupleDesc();
-
-  // // if no grouping
-  // if(agg.group.empty()){
-  //   auto op = agg.op; 
-
-  //   field_t count;
-  //   field_t answ;
-  //   for(auto &it: in){
-  //     switch(op){
-  //       case db::AggregateOp::SUM:
-  //         // do i have to handle different types :,) 
-  //         answ = answ + it.get_field(in_td.index_of(agg.field));
-  //       case db::AggregateOp::AVG:
-  //         return;
-  //         count += 1;
-  //       case db::AggregateOp::MIN:
-  //         if(answ <= it.get_field(in_td.index_of(agg.field))){
-  //           answ = it.get_field(in_td.index_of(agg.field));
-  //         }
-  //       case db::AggregateOp::MAX:
-  //         it.get_field(in_td.index_of(agg.field));
-  //       case db::AggregateOp::COUNT:
-  //         count ++;
-  //     }
-  //   }
+  //@author Sam Gibson
+  auto &in_td = in.getTupleDesc();
+  std::vector<field_t> result_fields{}; // save for results
 
 
-  // }
-  /*
-    
-    if no grouping: {
-      count, answ;
-      for entire tuple{
-        if COUNT or avg:
-          count ++
-        if min:
-          answ get changed if it is less than current
-        if max:
-          answ get changed if bigger than current
-        if sum or avg:
-          answ += value;
-        }
-        if avg: 
-        answ = answ/count;
-          
-        push answer
-        answ = 0;
-        count = 0;
+  std::unordered_map<std::string, std::vector<double>> blob = {};
+  blob['none'] = std::vector<double>(); // insert no group array
+
+
+  for(auto &it: in){
+    if(!agg.group){
+      blob['none'].push_back(it.get_field(in_td.index_of(agg.field)));
     }
-    if grouping isn't empty:{
-        nested loop:
-        answ; 
-        count;
-        for each group{
-          for within each group{
-            if COUNT or avg:
-              count ++
-            if min:
-              answ get changed if it is less than current
-            if max:
-              answ get changed if bigger than current
-            if sum or avg:
-              answ += value;
-          }
-          if avg: 
-          answ = answ/count;
-          
-          push answer
-          answ = 0;
-          count = 0;
-        }
-                
+    else{
+      blob[it.get_field(in_td.index_of(*agg.group))].push_back(it.get_field(in_td.index_of(agg.field)));
     }
-  */
+  }
+
+  if(agg.group){
+    switch(agg.op){
+      case db::AggregateOp::SUM:
+            // switch(answ) {
+      //         case field_t::INT:
+      //             answ += INT_SIZE;
+      //             break;
+      //         case field_t::DOUBLE:
+      //             offset += DOUBLE_SIZE;
+      //             break;
+      //       answ = answ + it.get_field(in_td.index_of(agg.field));
+      //     case db::AggregateOp::AVG:
+      //       return;
+      //       count += 1;
+      //     case db::AggregateOp::MIN:
+      //       if(answ <= it.get_field(in_td.index_of(agg.field))){
+      //         answ = it.get_field(in_td.index_of(agg.field));
+      //       }
+      //     case db::AggregateOp::MAX:
+      //       it.get_field(in_td.index_of(agg.field));
+      //     case db::AggregateOp::COUNT:
+      //       return it.size();
+    }
+  }
+   
+}
+
+
+/**
+ * @brief function to merge two tuples
+ * @param tuple_1 the first tuple
+ * @param tuple_2 the second tuple
+ * @param exclude_index the index to exclude from tuple_2
+ * @return the tuple that is merged from tuple_1 and tuple_2
+ */
+Tuple merge_tuple(const Tuple &tuple_1, const Tuple &tuple_2, size_t exclude_index){
+  // @author Phat Duong
+
+  std::vector<field_t> merged_fields {};
+  for (size_t i = 0; i<tuple_1.size(); i++){
+    merged_fields.push_back(tuple_1.get_field(i));
+  }
+
+  for (size_t i = 0; i<tuple_2.size(); i++){
+    if (i == exclude_index){
+      continue;
+    }
+    merged_fields.push_back(tuple_2.get_field(i));
+  }
+
+  return Tuple(merged_fields);
 }
 
 
