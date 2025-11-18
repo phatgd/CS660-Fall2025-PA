@@ -4,6 +4,7 @@
 #include <list>
 
 #include <unordered_map>
+#include <algorithm>
 
 using namespace db;
 
@@ -27,6 +28,27 @@ bool predicate_results(db::PredicateOp op, field_t value, field_t comp){
       return value >= comp;
     default:
       return false;
+  }
+}
+
+//@author Sam Gibson
+void agg_operations(db::AggregateOp op, std::vector<double> stuff, double &answ){
+  switch(op){
+    case db::AggregateOp::SUM:
+      answ = accumulate(stuff.first(), stuff.last(), 0);
+      break;
+    case db::AggregateOp::AVG:
+      answ = accumulate(stuff.first(), stuff.last(), 0)/ stuff.size();
+      break;
+    case db::AggregateOp::MIN:
+      answ = *min_element(stuff.begin(), stuff.end());
+      break;
+    case db::AggregateOp::MAX:
+      answ = *max_element(stuff.begin(), stuff.end());
+      break;
+    case db::AggregateOp::COUNT:
+      answ = stuff.size();
+      break;
   }
 }
 
@@ -114,27 +136,8 @@ void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
   }
 
   if(agg.group){
-    switch(agg.op){
-      case db::AggregateOp::SUM:
-            // switch(answ) {
-      //         case field_t::INT:
-      //             answ += INT_SIZE;
-      //             break;
-      //         case field_t::DOUBLE:
-      //             offset += DOUBLE_SIZE;
-      //             break;
-      //       answ = answ + it.get_field(in_td.index_of(agg.field));
-      //     case db::AggregateOp::AVG:
-      //       return;
-      //       count += 1;
-      //     case db::AggregateOp::MIN:
-      //       if(answ <= it.get_field(in_td.index_of(agg.field))){
-      //         answ = it.get_field(in_td.index_of(agg.field));
-      //       }
-      //     case db::AggregateOp::MAX:
-      //       it.get_field(in_td.index_of(agg.field));
-      //     case db::AggregateOp::COUNT:
-      //       return it.size();
+    for(int x = 0; x< blob.size(); x++){
+      
     }
   }
    
