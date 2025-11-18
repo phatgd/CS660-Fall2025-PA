@@ -1,6 +1,7 @@
 #include <db/Query.hpp>
 #include <iostream>
 #include <set>
+#include <unordered_map>
 
 using namespace db;
 
@@ -76,83 +77,49 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
 }
 
 void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
-  // TODO: Implement this function
-
-  // auto &in_td = in.getTupleDesc();
-
-  // // if no grouping
-  // if(agg.group.empty()){
-  //   auto op = agg.op; 
-
-  //   field_t count;
-  //   field_t answ;
-  //   for(auto &it: in){
-  //     switch(op){
-  //       case db::AggregateOp::SUM:
-  //         // do i have to handle different types :,) 
-  //         answ = answ + it.get_field(in_td.index_of(agg.field));
-  //       case db::AggregateOp::AVG:
-  //         return;
-  //         count += 1;
-  //       case db::AggregateOp::MIN:
-  //         if(answ <= it.get_field(in_td.index_of(agg.field))){
-  //           answ = it.get_field(in_td.index_of(agg.field));
-  //         }
-  //       case db::AggregateOp::MAX:
-  //         it.get_field(in_td.index_of(agg.field));
-  //       case db::AggregateOp::COUNT:
-  //         count ++;
-  //     }
-  //   }
+  //@author Sam Gibson
+  auto &in_td = in.getTupleDesc();
+  std::vector<field_t> result_fields{}; // save for results
 
 
-  // }
-  /*
-    
-    if no grouping: {
-      count, answ;
-      for entire tuple{
-        if COUNT or avg:
-          count ++
-        if min:
-          answ get changed if it is less than current
-        if max:
-          answ get changed if bigger than current
-        if sum or avg:
-          answ += value;
-        }
-        if avg: 
-        answ = answ/count;
-          
-        push answer
-        answ = 0;
-        count = 0;
+  std::unordered_map<std::string, std::vector<double>> blob = {};
+  blob['none'] = std::vector<double>(); // insert no group array
+
+
+  for(auto &it: in){
+    if(!agg.group){
+      blob['none'].push_back(it.get_field(in_td.index_of(agg.field)));
     }
-    if grouping isn't empty:{
-        nested loop:
-        answ; 
-        count;
-        for each group{
-          for within each group{
-            if COUNT or avg:
-              count ++
-            if min:
-              answ get changed if it is less than current
-            if max:
-              answ get changed if bigger than current
-            if sum or avg:
-              answ += value;
-          }
-          if avg: 
-          answ = answ/count;
-          
-          push answer
-          answ = 0;
-          count = 0;
-        }
-                
+    else{
+      blob[it.get_field(in_td.index_of(*agg.group))].push_back(it.get_field(in_td.index_of(agg.field)));
     }
-  */
+  }
+
+  if(agg.group){
+    switch(agg.op){
+      case db::AggregateOp::SUM:
+            // switch(answ) {
+      //         case field_t::INT:
+      //             answ += INT_SIZE;
+      //             break;
+      //         case field_t::DOUBLE:
+      //             offset += DOUBLE_SIZE;
+      //             break;
+      //       answ = answ + it.get_field(in_td.index_of(agg.field));
+      //     case db::AggregateOp::AVG:
+      //       return;
+      //       count += 1;
+      //     case db::AggregateOp::MIN:
+      //       if(answ <= it.get_field(in_td.index_of(agg.field))){
+      //         answ = it.get_field(in_td.index_of(agg.field));
+      //       }
+      //     case db::AggregateOp::MAX:
+      //       it.get_field(in_td.index_of(agg.field));
+      //     case db::AggregateOp::COUNT:
+      //       return it.size();
+    }
+  }
+   
 }
 
 void db::join(const DbFile &left, const DbFile &right, DbFile &out, const JoinPredicate &pred) {
