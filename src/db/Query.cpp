@@ -68,52 +68,23 @@ void db::projection(const DbFile &in, DbFile &out, const std::vector<std::string
 }
 
 void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate> &pred) {
-  // TODO: Implement this function
   //@author Sam Gibson
   auto &in_td = in.getTupleDesc();
 
-  // if empty add all to out
-  if(pred.empty()){
-    for(const auto &it : in){
-      std::vector<field_t> result_fields{};
-      for(int x = 0; x< it.size(); x++){
-        result_fields.push_back(it.get_field(x));
+  for(const auto &it : in){
+    bool pass = true; // if all conditions are true
+    for(const auto &p: pred){
+      if(!predicate_results(p.op, p.value, it.get_field(in_td.index_of(p.field_name)))){
+        pass = false;
+        break;
       }
-      
-      out.insertTuple(Tuple(result_fields));
-
     }
 
+    if(pass){
+      out.insertTuple(Tuple(it));
+    }
   }
-  else{
-    // check what columns filters are on
-    std::set<std::string> cols{};
-
-    for(auto &p: pred){
-      cols.insert(p.field_name);
-    }
-
-    for(const auto &it : in){
-      std::vector<field_t> result_fields{};
-      bool pass = true; // if all conditions are true
-      
-      for(const auto &p: pred){
-        if(!(pass = predicate_results(p.op, p.value, it.get_field(in_td.index_of(p.field_name))))){
-          break;
-        }
-        result_fields.push_back(it.get_field(in_td.index_of(p.field_name)));
-      }
-      if(pass){
-        out.insertTuple(Tuple(result_fields));
-        std::cout<< pass<< ": pushed";
-      }
-    }
     
-  }
-  
-
-
-  
 }
 
 void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
@@ -142,33 +113,6 @@ void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
   }
    
 }
-
-
-/**
- * @brief function to merge two tuples
- * @param tuple_1 the first tuple
- * @param tuple_2 the second tuple
- * @param exclude_index the index to exclude from tuple_2
- * @return the tuple that is merged from tuple_1 and tuple_2
- */
-Tuple merge_tuple(const Tuple &tuple_1, const Tuple &tuple_2, size_t exclude_index){
-  // @author Phat Duong
-
-  std::vector<field_t> merged_fields {};
-  for (size_t i = 0; i<tuple_1.size(); i++){
-    merged_fields.push_back(tuple_1.get_field(i));
-  }
-
-  for (size_t i = 0; i<tuple_2.size(); i++){
-    if (i == exclude_index){
-      continue;
-    }
-    merged_fields.push_back(tuple_2.get_field(i));
-  }
-
-  return Tuple(merged_fields);
-}
-
 
 /**
  * @brief function to merge two tuples
