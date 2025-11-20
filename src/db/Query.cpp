@@ -91,15 +91,14 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
 void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
   //@author Sam Gibson
   auto &in_td = in.getTupleDesc();
-  std::vector<field_t> result_fields{}; // save for results
 
   std::map<std::string, std::vector<int>> blob;
   blob.insert({"none", std::vector<int>()}); // insert no group array
 
-
+  // insert correct values to operate on
   for(const auto &it: in){
     std::string field = *agg.group;
-    int value = it.get_field(in_td.index_of(agg.field));
+    int value = std::get<int>(it.get_field(in_td.index_of(agg.field)));
     
     if(!agg.group){
       auto foo = blob.find("none");
@@ -111,20 +110,24 @@ void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
         foo->second.push_back(value);
       }
       else{
-        std::vector<int> = value;
-        foo->second.insert({field, value});
+        std::vector<int> val = {value};
+        blob.insert({field, val});
       }
     }
   }
 
-  std::map<std::string, double> results;
+  // calculate answers 
+  std::vector<field_t> result_fields{}; // save for results
   if(agg.group){
     for(auto x: blob){
       auto answ = 0;
       agg_operations(agg.op, x.second, answ);
-      results[x.first] = answ;
+      result_fields.push_back(x.first);
+      result_fields.push_back(answ);
     }
   }
+
+  out.insertTuple(Tuple(result_fields));
 }
 
 /**
