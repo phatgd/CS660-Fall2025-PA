@@ -3,7 +3,7 @@
 #include <set>
 #include <list>
 
-#include <unordered_map>
+#include <map>
 #include <bits/stdc++.h>
 
 using namespace db;
@@ -32,7 +32,7 @@ bool predicate_results(db::PredicateOp op, field_t value, field_t comp){
 }
 
 //@author Sam Gibson
-void agg_operations(db::AggregateOp op, std::vector<double> stuff, double &answ){
+void agg_operations(db::AggregateOp op, std::vector<int> stuff, auto answ){
   switch(op){
     case db::AggregateOp::SUM:
       for(auto x: stuff){ answ += x; }
@@ -42,13 +42,13 @@ void agg_operations(db::AggregateOp op, std::vector<double> stuff, double &answ)
       answ = answ/ stuff.size();
       break;
     case db::AggregateOp::MIN:
-      answ = *min_element(stuff.begin(), stuff.end());
+      answ += *min_element(stuff.begin(), stuff.end());
       break;
     case db::AggregateOp::MAX:
-      answ = *max_element(stuff.begin(), stuff.end());
+      answ += *max_element(stuff.begin(), stuff.end());
       break;
     case db::AggregateOp::COUNT:
-      answ = stuff.size();
+      answ += stuff.size();
       break;
   }
 }
@@ -93,35 +93,36 @@ void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
   auto &in_td = in.getTupleDesc();
   std::vector<field_t> result_fields{}; // save for results
 
-
-  std::unordered_map<std::string, std::vector<double>> blob = {};
-  std::string none = "none";
-  blob.insert(none, std::vector<double>()); // insert no group array
+  std::map<std::string, std::vector<int>> blob;
+  blob.insert({"none", std::vector<int>()}); // insert no group array
 
 
-  for(auto &it: in){
+  for(const auto &it: in){
+    std::string field = *agg.group;
+    int value = it.get_field(in_td.index_of(agg.field));
+    
     if(!agg.group){
       auto foo = blob.find("none");
-      foo->second.push_back(it.get_field(in_td.index_of(agg.field)));
+      foo->second.push_back(value);
     }
     else{
-      auto foo = blob.find(it.get_field(in_td.index_of(*agg.group)));
+      auto foo = blob.find(field);
       if(foo != blob.end()) {
-        foo->second.push_back(it.get_field(in_td.index_of(agg.field)));
+        foo->second.push_back(value);
       }
       else{
-        foo.insert(it.get_field(in_td.index_of(*agg.group)), it.get_field(in_td.index_of(agg.field)));
+        std::vector<int> = value;
+        foo->second.insert({field, value});
       }
-      
     }
   }
 
+  std::map<std::string, double> results;
   if(agg.group){
     for(auto x: blob){
-      double answ = 0.0;
+      auto answ = 0;
       agg_operations(agg.op, x.second, answ);
-      x.second.clear();
-      x.second.push_back(answ);
+      results[x.first] = answ;
     }
   }
 }
