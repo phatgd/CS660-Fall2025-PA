@@ -4,7 +4,7 @@
 #include <list>
 
 #include <unordered_map>
-#include <algorithm>
+#include <bits/stdc++.h>
 
 using namespace db;
 
@@ -35,10 +35,11 @@ bool predicate_results(db::PredicateOp op, field_t value, field_t comp){
 void agg_operations(db::AggregateOp op, std::vector<double> stuff, double &answ){
   switch(op){
     case db::AggregateOp::SUM:
-      answ = accumulate(stuff.first(), stuff.last(), 0);
+      for(auto x: stuff){ answ += x; }
       break;
     case db::AggregateOp::AVG:
-      answ = accumulate(stuff.first(), stuff.last(), 0)/ stuff.size();
+      for(auto x: stuff){ answ += x; }
+      answ = answ/ stuff.size();
       break;
     case db::AggregateOp::MIN:
       answ = *min_element(stuff.begin(), stuff.end());
@@ -94,24 +95,35 @@ void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
 
 
   std::unordered_map<std::string, std::vector<double>> blob = {};
-  blob['none'] = std::vector<double>(); // insert no group array
+  std::string none = "none";
+  blob.insert(none, std::vector<double>()); // insert no group array
 
 
   for(auto &it: in){
     if(!agg.group){
-      blob['none'].push_back(it.get_field(in_td.index_of(agg.field)));
+      auto foo = blob.find("none");
+      foo->second.push_back(it.get_field(in_td.index_of(agg.field)));
     }
     else{
-      blob[it.get_field(in_td.index_of(*agg.group))].push_back(it.get_field(in_td.index_of(agg.field)));
+      auto foo = blob.find(it.get_field(in_td.index_of(*agg.group)));
+      if(foo != blob.end()) {
+        foo->second.push_back(it.get_field(in_td.index_of(agg.field)));
+      }
+      else{
+        foo.insert(it.get_field(in_td.index_of(*agg.group)), it.get_field(in_td.index_of(agg.field)));
+      }
+      
     }
   }
 
   if(agg.group){
-    for(int x = 0; x< blob.size(); x++){
-      
+    for(auto x: blob){
+      double answ = 0.0;
+      agg_operations(agg.op, x.second, answ);
+      x.second.clear();
+      x.second.push_back(answ);
     }
   }
-   
 }
 
 /**
