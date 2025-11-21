@@ -1,10 +1,8 @@
 #include <db/Query.hpp>
 #include <iostream>
-#include <set>
-#include <list>
-
 #include <map>
-#include <bits/stdc++.h>
+#include <numeric>
+// #include <bits/stdc++.h>
 
 using namespace db;
 
@@ -32,24 +30,18 @@ bool predicate_results(db::PredicateOp op, field_t value, field_t comp){
 }
 
 //@author Sam Gibson
-void agg_operations(db::AggregateOp op, std::vector<int> stuff, auto answ){
+const field_t agg_operations(db::AggregateOp op, std::vector<int> stuff){
   switch(op){
     case db::AggregateOp::SUM:
-      for(auto x: stuff){ answ += x; }
-      break;
+      return std::accumulate(stuff.begin(), stuff.end(), 0);
     case db::AggregateOp::AVG:
-      for(auto x: stuff){ answ += x; }
-      answ = answ/ stuff.size();
-      break;
+      return (double) ((double) std::accumulate(stuff.begin(), stuff.end(), 0) / stuff.size());
     case db::AggregateOp::MIN:
-      answ += *min_element(stuff.begin(), stuff.end());
-      break;
+      return *min_element(stuff.begin(), stuff.end());
     case db::AggregateOp::MAX:
-      answ += *max_element(stuff.begin(), stuff.end());
-      break;
+      return *max_element(stuff.begin(), stuff.end());
     case db::AggregateOp::COUNT:
-      answ += stuff.size();
-      break;
+      return (int) stuff.size();
   }
 }
 
@@ -89,45 +81,34 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
 }
 
 void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
-  //@author Sam Gibson
+  //@author Sam Gibson, Phat Duong
   auto &in_td = in.getTupleDesc();
 
-  std::map<std::string, std::vector<int>> blob;
-  blob.insert({"none", std::vector<int>()}); // insert no group array
-
-  // insert correct values to operate on
+  std::map<field_t, std::vector<int>> agg_map;
+  if (!agg.group){
+    agg_map.emplace("none", std::vector<int>()); // insert no group array
+  }
+ 
+  // construct the unordered_map
   for(const auto &it: in){
-    std::string field = *agg.group;
-    int value = std::get<int>(it.get_field(in_td.index_of(agg.field)));
+    const auto field = agg.group ? it.get_field(in_td.index_of(*agg.group)) : "none";
+    const auto value = std::get<int>(it.get_field(in_td.index_of(agg.field)));
     
-    if(!agg.group){
-      auto foo = blob.find("none");
-      foo->second.push_back(value);
-    }
-    else{
-      auto foo = blob.find(field);
-      if(foo != blob.end()) {
-        foo->second.push_back(value);
-      }
-      else{
-        std::vector<int> val = {value};
-        blob.insert({field, val});
-      }
-    }
+    // emplace will not happen if field already exists
+    agg_map.emplace(field);
+    agg_map[field].push_back(value);
   }
 
-  // calculate answers 
-  std::vector<field_t> result_fields{}; // save for results
-  if(agg.group){
-    for(auto x: blob){
-      auto answ = 0;
-      agg_operations(agg.op, x.second, answ);
-      result_fields.push_back(x.first);
-      result_fields.push_back(answ);
+  // iterate through map and calculate results
+  for (auto &group:agg_map){
+    // save for results
+    std::vector<field_t> result_fields{}; 
+    if (agg.group){
+      result_fields.push_back(group.first);
     }
+    result_fields.push_back(agg_operations(agg.op, group.second));
+    out.insertTuple(Tuple(result_fields));
   }
-
-  out.insertTuple(Tuple(result_fields));
 }
 
 /**
