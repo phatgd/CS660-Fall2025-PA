@@ -95,7 +95,7 @@ void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
     const auto value = std::get<int>(it.get_field(in_td.index_of(agg.field)));
     
     // emplace will not happen if field already exists
-    agg_map.emplace(field);
+    agg_map.emplace(field, std::vector<int>());
     agg_map[field].push_back(value);
   }
 
