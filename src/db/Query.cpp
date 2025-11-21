@@ -55,7 +55,7 @@ void db::projection(const DbFile &in, DbFile &out, const std::vector<std::string
       result_fields.push_back(it.get_field(in_td.index_of(field)));
     }
 
-    out.insertTuple(Tuple(result_fields));
+    out.insertTuple(result_fields);
     
   }
 }
@@ -74,7 +74,7 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
     }
 
     if(pass){
-      out.insertTuple(Tuple(it));
+      out.insertTuple(it);
     }
   }
     
@@ -83,15 +83,11 @@ void db::filter(const DbFile &in, DbFile &out, const std::vector<FilterPredicate
 void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
   //@author Sam Gibson, Phat Duong
   auto &in_td = in.getTupleDesc();
-
   std::map<field_t, std::vector<int>> agg_map;
-  if (!agg.group){
-    agg_map.emplace("none", std::vector<int>()); // insert no group array
-  }
  
   // construct the unordered_map
   for(const auto &it: in){
-    const auto field = agg.group ? it.get_field(in_td.index_of(*agg.group)) : "none";
+    const auto field = agg.group ? it.get_field(in_td.index_of(*agg.group)) : 0;
     const auto value = std::get<int>(it.get_field(in_td.index_of(agg.field)));
     
     // emplace will not happen if field already exists
@@ -107,7 +103,7 @@ void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
       result_fields.push_back(group.first);
     }
     result_fields.push_back(agg_operations(agg.op, group.second));
-    out.insertTuple(Tuple(result_fields));
+    out.insertTuple(result_fields);
   }
 }
 
@@ -133,7 +129,7 @@ Tuple merge_tuple(const Tuple &tuple_1, const Tuple &tuple_2, size_t exclude_ind
     merged_fields.push_back(tuple_2.get_field(i));
   }
 
-  return Tuple(merged_fields);
+  return merged_fields;
 }
 
 void db::join(const DbFile &left, const DbFile &right, DbFile &out, const JoinPredicate &pred) {
