@@ -35,7 +35,7 @@ const field_t agg_operations(db::AggregateOp op, std::vector<int> stuff){
     case db::AggregateOp::SUM:
       return std::accumulate(stuff.begin(), stuff.end(), 0);
     case db::AggregateOp::AVG:
-      return (double) ((double) std::accumulate(stuff.begin(), stuff.end(), 0) / stuff.size());
+      return (double) std::accumulate(stuff.begin(), stuff.end(), 0) / stuff.size();
     case db::AggregateOp::MIN:
       return *min_element(stuff.begin(), stuff.end());
     case db::AggregateOp::MAX:
