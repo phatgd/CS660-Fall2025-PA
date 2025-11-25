@@ -116,7 +116,6 @@ void db::aggregate(const DbFile &in, DbFile &out, const Aggregate &agg) {
  */
 Tuple merge_tuple(const Tuple &tuple_1, const Tuple &tuple_2, size_t exclude_index){
   // @author Phat Duong
-
   std::vector<field_t> merged_fields {};
   for (size_t i = 0; i<tuple_1.size(); i++){
     merged_fields.push_back(tuple_1.get_field(i));
@@ -145,7 +144,6 @@ void db::join(const DbFile &left, const DbFile &right, DbFile &out, const JoinPr
 
   for(const auto &left_tuple : left){
     for(const auto &right_tuple : right){
-      size_t right_field_index = right_td.index_of(pred.right);
       if(predicate_results(
         pred.op, 
         left_tuple.get_field(left_td.index_of(pred.left)),
