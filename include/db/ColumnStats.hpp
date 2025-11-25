@@ -5,10 +5,16 @@
 namespace db {
 
 /**
- * A class to represent a fixed-width histogram over a single integer-based field.
+ * A class to represent a fixed-width histogram over a single integer-based field. 
  */
 class ColumnStats {
   // TODO pa4: add private members
+  const unsigned buckets;
+  const int min;
+  const int max;
+
+  const int bucket_width;
+  std::vector<size_t> bucket_height;
 
 public:
   /**
